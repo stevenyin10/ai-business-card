@@ -1,0 +1,194 @@
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import {
+  BUSINESS_CARD_STORAGE_KEY,
+  DEFAULT_BUSINESS_CARD,
+  safeParseBusinessCard,
+  type BusinessCard,
+} from '@/lib/businessCard';
+import { BusinessCardView } from '@/app/components/BusinessCardView';
+
+type ImportResult = {
+  businessCard: BusinessCard;
+};
+
+export default function ImportBusinessCardPage() {
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [existingTemplate, setExistingTemplate] = useState<BusinessCard['template']>(
+    DEFAULT_BUSINESS_CARD.template,
+  );
+  const [resultCard, setResultCard] = useState<BusinessCard | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(BUSINESS_CARD_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = safeParseBusinessCard(JSON.parse(raw));
+      if (parsed) setExistingTemplate(parsed.template);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl('');
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  const canSubmit = useMemo(() => !!file && !loading, [file, loading]);
+
+  const saveToLocalStorage = (card: BusinessCard) => {
+    try {
+      localStorage.setItem(BUSINESS_CARD_STORAGE_KEY, JSON.stringify(card));
+    } catch {
+      // ignore
+    }
+  };
+
+  return (
+    <div className="min-h-[100svh] bg-gray-50">
+      <div className="mx-auto max-w-5xl min-h-[100svh] flex flex-col">
+        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-gray-200">
+          <div className="px-4 sm:px-6 py-4 text-gray-900 flex items-center justify-between">
+            <div className="font-semibold tracking-tight">匯入傳統名片</div>
+            <div className="flex items-center gap-2">
+              <a
+                href="/"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+              >
+                回首頁
+              </a>
+              <a
+                href="/dashboard"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+              >
+                Dashboard
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex-1 px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm p-5">
+            <div className="text-gray-900 font-semibold tracking-tight">上傳名片照片</div>
+            <div className="mt-1 text-sm text-gray-600">
+              上傳後會自動解析姓名、職稱、公司、電話、Email 等資訊，並轉成我們的名片格式。
+            </div>
+
+            <label className="mt-4 block">
+              <div className="text-xs font-medium text-gray-600">選擇圖片檔</div>
+              <input
+                type="file"
+                accept="image/*"
+                className="mt-1 block w-full text-sm"
+                onChange={(e) => {
+                  const f = e.target.files?.[0] ?? null;
+                  setError(null);
+                  setResultCard(null);
+                  setFile(f);
+                }}
+              />
+            </label>
+
+            {previewUrl && (
+              <div className="mt-4 rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
+                <img src={previewUrl} alt="名片預覽" className="w-full h-auto" />
+              </div>
+            )}
+
+            {error && (
+              <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+
+            <div className="mt-4 flex items-center gap-2">
+              <button
+                type="button"
+                disabled={!canSubmit}
+                onClick={async () => {
+                  if (!file) return;
+                  setLoading(true);
+                  setError(null);
+                  setResultCard(null);
+
+                  try {
+                    const form = new FormData();
+                    form.append('file', file);
+
+                    const res = await fetch('/api/card-import', {
+                      method: 'POST',
+                      body: form,
+                    });
+
+                    if (!res.ok) {
+                      const text = await res.text().catch(() => '');
+                      throw new Error(text || '轉換失敗');
+                    }
+
+                    const json = (await res.json()) as ImportResult;
+                    const nextCard: BusinessCard = {
+                      ...DEFAULT_BUSINESS_CARD,
+                      ...json.businessCard,
+                      template: existingTemplate,
+                      leftImageUrl: '',
+                      rightImageUrl: '',
+                      contentLeftImageUrl: '',
+                      contentRightImageUrl: '',
+                      contentBottomImageUrl: '',
+                      carouselImageUrls: [],
+                    };
+
+                    setResultCard(nextCard);
+                    saveToLocalStorage(nextCard);
+                  } catch (e: any) {
+                    setError(e?.message || '轉換失敗');
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                className="px-4 py-2 rounded-full bg-gray-950 text-white text-sm font-medium hover:bg-gray-900 disabled:bg-gray-400"
+              >
+                {loading ? '轉換中…' : '一鍵轉換'}
+              </button>
+
+              <a
+                href="/"
+                className="px-4 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
+              >
+                轉換後去看名片
+              </a>
+            </div>
+
+            <div className="mt-3 text-xs text-gray-500">
+              提醒：解析結果可能需要到 Dashboard 微調。
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm p-5">
+            <div className="text-gray-900 font-semibold tracking-tight">預覽（轉換後）</div>
+            <div className="mt-1 text-sm text-gray-600">
+              轉換成功後會自動套用你目前的名片模板。
+            </div>
+
+            <div className="mt-4">
+              <BusinessCardView card={resultCard ?? DEFAULT_BUSINESS_CARD} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
