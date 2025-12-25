@@ -1,17 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import OpenAI from 'openai';
+import { readEnv } from '@/lib/runtimeEnv';
 
 export const runtime = 'edge';
 
-function getSupabaseAdminClient() {
-  const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+async function getSupabaseAdminClient() {
+  const url = (await readEnv('SUPABASE_URL')) || (await readEnv('NEXT_PUBLIC_SUPABASE_URL'));
+  const serviceRoleKey = await readEnv('SUPABASE_SERVICE_ROLE_KEY');
   if (!url || !serviceRoleKey) return null;
   return createClient(url, serviceRoleKey);
 }
 
-type SupabaseAdminClient = NonNullable<ReturnType<typeof getSupabaseAdminClient>>;
+type SupabaseAdminClient = NonNullable<Awaited<ReturnType<typeof getSupabaseAdminClient>>>;
 
 function getBearerToken(req: Request): string {
   const raw = req.headers.get('authorization') || req.headers.get('Authorization') || '';
@@ -46,7 +47,7 @@ const BodySchema = z.object({
 });
 
 export async function POST(req: Request) {
-  const supabase = getSupabaseAdminClient();
+  const supabase = await getSupabaseAdminClient();
   if (!supabase) return Response.json({ error: 'Server config error' }, { status: 500 });
 
   const userId = await getUserId(req, supabase);
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
   const vectorStoreId = await getExistingVectorStoreId(supabase, userId);
   if (!vectorStoreId) return Response.json({ error: 'Vector store not initialized' }, { status: 400 });
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const openai = new OpenAI({ apiKey: await readEnv('OPENAI_API_KEY') });
 
   const batchIds = Array.from(new Set(parsed.data.batchIds.map((s) => s.trim()).filter(Boolean))).slice(0, 20);
   const result: Record<string, { status?: string; file_counts?: unknown; error?: string }> = {};

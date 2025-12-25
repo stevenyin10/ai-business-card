@@ -1,18 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
+import { readEnv } from '@/lib/runtimeEnv';
 
 export const runtime = 'edge';
 
 const TABLE = 'agent_knowledge_files';
 
-function getSupabaseAdminClient() {
-  const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+async function getSupabaseAdminClient() {
+  const url = (await readEnv('SUPABASE_URL')) || (await readEnv('NEXT_PUBLIC_SUPABASE_URL'));
+  const serviceRoleKey = await readEnv('SUPABASE_SERVICE_ROLE_KEY');
   if (!url || !serviceRoleKey) return null;
   return createClient(url, serviceRoleKey);
 }
 
-type SupabaseAdminClient = NonNullable<ReturnType<typeof getSupabaseAdminClient>>;
+type SupabaseAdminClient = NonNullable<Awaited<ReturnType<typeof getSupabaseAdminClient>>>;
 
 function getBearerToken(req: Request): string {
   const raw = req.headers.get('authorization') || req.headers.get('Authorization') || '';
@@ -42,7 +43,7 @@ type FileRow = {
 };
 
 export async function GET(req: Request) {
-  const supabase = getSupabaseAdminClient();
+  const supabase = await getSupabaseAdminClient();
   if (!supabase) return Response.json({ error: 'Server config error' }, { status: 500 });
 
   const userId = await getUserId(req, supabase);
@@ -67,7 +68,7 @@ export async function GET(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const supabase = getSupabaseAdminClient();
+  const supabase = await getSupabaseAdminClient();
   if (!supabase) return Response.json({ error: 'Server config error' }, { status: 500 });
 
   const userId = await getUserId(req, supabase);
@@ -128,7 +129,7 @@ export async function DELETE(req: Request) {
   // Best-effort delete OpenAI file.
   if (row.openai_file_id) {
     try {
-      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      const openai = new OpenAI({ apiKey: await readEnv('OPENAI_API_KEY') });
       await openai.files.delete(row.openai_file_id);
     } catch {
       // ignore

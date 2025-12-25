@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
+import { readEnv } from '@/lib/runtimeEnv';
 
 export const runtime = 'edge';
 
@@ -34,14 +35,14 @@ function getSupabaseProjectRef(): string {
   }
 }
 
-function getSupabaseAdminClient() {
-  const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+async function getSupabaseAdminClient() {
+  const url = (await readEnv('SUPABASE_URL')) || (await readEnv('NEXT_PUBLIC_SUPABASE_URL'));
+  const serviceRoleKey = await readEnv('SUPABASE_SERVICE_ROLE_KEY');
   if (!url || !serviceRoleKey) return null;
   return createClient(url, serviceRoleKey);
 }
 
-type SupabaseAdminClient = NonNullable<ReturnType<typeof getSupabaseAdminClient>>;
+type SupabaseAdminClient = NonNullable<Awaited<ReturnType<typeof getSupabaseAdminClient>>>;
 
 async function getUserVectorStoreId(
   supabase: SupabaseAdminClient,
@@ -117,7 +118,7 @@ function hasAuthGetUser(
 }
 
 async function resolveOwnerUserId(req: Request, supabase: unknown | null) {
-  const fallback = (process.env.DEFAULT_OWNER_USER_ID || '').trim();
+  const fallback = (await readEnv('DEFAULT_OWNER_USER_ID')).trim();
   const token = getBearerToken(req);
 
   if (supabase && token && hasAuthGetUser(supabase)) {
@@ -231,7 +232,7 @@ export async function POST(req: Request) {
 
   const bearerToken = getBearerToken(req);
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = await getSupabaseAdminClient();
   if (!supabase) {
     console.error('[chat] missing Supabase env: need SUPABASE_SERVICE_ROLE_KEY and (SUPABASE_URL or NEXT_PUBLIC_SUPABASE_URL)');
   }
@@ -291,7 +292,7 @@ export async function POST(req: Request) {
 
   const normalizedUiMessages = normalizeUiMessages(messages as unknown[]);
 
-  const openaiApiKey = (process.env.OPENAI_API_KEY || '').trim();
+  const openaiApiKey = (await readEnv('OPENAI_API_KEY')).trim();
   if (!openaiApiKey) {
     return new Response('伺服器缺少 OPENAI_API_KEY，請先設定環境變數。', { status: 500 });
   }

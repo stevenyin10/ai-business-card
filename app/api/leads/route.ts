@@ -1,6 +1,7 @@
 // app/api/leads/route.ts
 import { z } from 'zod';
 import { createClient } from '@supabase/supabase-js';
+import { readEnv } from '@/lib/runtimeEnv';
 
 export const runtime = 'edge';
 
@@ -24,15 +25,15 @@ export async function POST(req: Request) {
 
   const { name, phone, note, sessionId } = parsed.data;
 
-  const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const url = (await readEnv('SUPABASE_URL')) || (await readEnv('NEXT_PUBLIC_SUPABASE_URL'));
+  const serviceRoleKey = await readEnv('SUPABASE_SERVICE_ROLE_KEY');
   if (!url || !serviceRoleKey) {
     return new Response('缺少 Supabase 環境變數', { status: 500 });
   }
   const supabase = createClient(url, serviceRoleKey);
 
   const token = getBearerToken(req);
-  let ownerUserId = (process.env.DEFAULT_OWNER_USER_ID || '').trim();
+  let ownerUserId = (await readEnv('DEFAULT_OWNER_USER_ID')).trim();
   if (token) {
     try {
       const { data, error } = await supabase.auth.getUser(token);

@@ -1,6 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { generateObject } from 'ai';
 import { z } from 'zod';
+import { readEnv } from '@/lib/runtimeEnv';
 import {
   DEFAULT_BUSINESS_CARD,
   type BusinessCard,
@@ -67,7 +68,7 @@ function coalesceStringArray(value: unknown, fallback: string[]): string[] {
 }
 
 export async function POST(req: Request) {
-  if (!process.env.OPENAI_API_KEY) {
+  if (!(await readEnv('OPENAI_API_KEY'))) {
     return new Response('Missing OPENAI_API_KEY', { status: 500 });
   }
 

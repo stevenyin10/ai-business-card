@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { createClient } from '@supabase/supabase-js';
+import { readEnv } from '@/lib/runtimeEnv';
 
 export const runtime = 'edge';
 
@@ -8,9 +9,9 @@ const VisitSchema = z.object({
   path: z.string().optional().default('/'),
 });
 
-function getSupabaseAdminClient() {
-  const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+async function getSupabaseAdminClient() {
+  const url = (await readEnv('SUPABASE_URL')) || (await readEnv('NEXT_PUBLIC_SUPABASE_URL'));
+  const serviceRoleKey = await readEnv('SUPABASE_SERVICE_ROLE_KEY');
   if (!url || !serviceRoleKey) return null;
   return createClient(url, serviceRoleKey);
 }
@@ -20,10 +21,10 @@ export async function POST(req: Request) {
   const parsed = VisitSchema.safeParse(body);
   if (!parsed.success) return Response.json({ error: '無效資料' }, { status: 400 });
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = await getSupabaseAdminClient();
   if (!supabase) return new Response('缺少 Supabase 環境變數', { status: 500 });
 
-  const ownerUserId = (process.env.DEFAULT_OWNER_USER_ID || '').trim();
+  const ownerUserId = (await readEnv('DEFAULT_OWNER_USER_ID')).trim();
   if (!ownerUserId) return new Response('缺少 owner user id', { status: 500 });
 
   const ua = req.headers.get('user-agent') || null;
