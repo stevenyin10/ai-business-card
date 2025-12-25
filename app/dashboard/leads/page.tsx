@@ -277,7 +277,7 @@ export default function LeadsDashboardPage() {
       .from('session_controls')
       .select('auto_reply_enabled')
       .eq('session_id', sid)
-      .single();
+      .maybeSingle();
     // 若無資料預設為 true
     setAutoReplyEnabled(data?.auto_reply_enabled ?? true);
   };
