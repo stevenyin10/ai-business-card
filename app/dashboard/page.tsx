@@ -7,7 +7,8 @@ import {
   safeParseBusinessCard,
   type BusinessCard,
 } from '@/lib/businessCard';
-import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { useMemo, useState } from 'react';
 
 function splitLines(value: string) {
   return value
@@ -21,19 +22,18 @@ function joinLines(value: string[]) {
 }
 
 export default function DashboardPage() {
-  const [card, setCard] = useState<BusinessCard>(DEFAULT_BUSINESS_CARD);
-  const [savedAt, setSavedAt] = useState<number | null>(null);
-
-  useEffect(() => {
+  const [card, setCard] = useState<BusinessCard>(() => {
     try {
+      if (typeof window === 'undefined') return DEFAULT_BUSINESS_CARD;
       const raw = localStorage.getItem(BUSINESS_CARD_STORAGE_KEY);
-      if (!raw) return;
+      if (!raw) return DEFAULT_BUSINESS_CARD;
       const parsed = safeParseBusinessCard(JSON.parse(raw));
-      if (parsed) setCard(parsed);
+      return parsed ?? DEFAULT_BUSINESS_CARD;
     } catch {
-      // ignore
+      return DEFAULT_BUSINESS_CARD;
     }
-  }, []);
+  });
+  const [savedAt, setSavedAt] = useState<number | null>(null);
 
   const highlightsText = useMemo(() => joinLines(card.highlights), [card.highlights]);
   const servicesText = useMemo(() => joinLines(card.services), [card.services]);
@@ -65,18 +65,24 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex gap-2">
-            <a
+            <Link
               href="/dashboard/leads"
               className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium"
             >
               業務後台
-            </a>
-            <a
+            </Link>
+            <Link
+              href="/dashboard/knowledge"
+              className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium"
+            >
+              知識庫
+            </Link>
+            <Link
               href="/"
               className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium"
             >
               回首頁
-            </a>
+            </Link>
             <button
               type="button"
               onClick={reset}

@@ -2,6 +2,26 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+## Environment Variables
+
+Create a `.env.local` in the project root (you can copy from `.env.example`).
+
+Required:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server-only; used by `/api/chat` and `/api/leads` to write into `messages`/`leads`)
+- `OPENAI_API_KEY`
+
+Optional:
+
+- `DEFAULT_OWNER_USER_ID` (only used when the request has no `Authorization: Bearer <token>`; recommended to log in instead)
+
+## Database
+
+- Create the `survey` table by running [supabase/survey.sql](supabase/survey.sql) in Supabase SQL Editor.
+- Create the `visits` table by running [supabase/visits.sql](supabase/visits.sql) in Supabase SQL Editor.
+
 First, run the development server:
 
 ```bash

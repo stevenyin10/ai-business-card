@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { createSupabaseBrowserClient } from '@/lib/supabaseBrowser';
 
 export default function LoginPage() {
@@ -39,12 +40,12 @@ export default function LoginPage() {
         <div className="sticky top-0 z-10 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-gray-200">
           <div className="px-4 py-4 text-gray-900 flex items-center justify-between">
             <div className="font-semibold tracking-tight">業務員登入</div>
-            <a
+            <Link
               href="/"
               className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
             >
               回首頁
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -111,8 +112,9 @@ export default function LoginPage() {
                     if (error) throw error;
                     // 如果你在 Supabase 關掉 Confirm email，這裡會直接登入；否則會需要收信。
                   }
-                } catch (err: any) {
-                  setError(err?.message || '登入失敗');
+                } catch (err: unknown) {
+                  const msg = err instanceof Error ? err.message : String(err);
+                  setError(msg || '登入失敗');
                 } finally {
                   setLoading(false);
                 }

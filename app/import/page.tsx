@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import {
   BUSINESS_CARD_STORAGE_KEY,
   DEFAULT_BUSINESS_CARD,
@@ -64,18 +66,18 @@ export default function ImportBusinessCardPage() {
           <div className="px-4 sm:px-6 py-4 text-gray-900 flex items-center justify-between">
             <div className="font-semibold tracking-tight">匯入傳統名片</div>
             <div className="flex items-center gap-2">
-              <a
+              <Link
                 href="/"
                 className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
               >
                 回首頁
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/dashboard"
                 className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
               >
                 Dashboard
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -104,7 +106,16 @@ export default function ImportBusinessCardPage() {
 
             {previewUrl && (
               <div className="mt-4 rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
-                <img src={previewUrl} alt="名片預覽" className="w-full h-auto" />
+                <div className="relative w-full aspect-[4/3]">
+                  <Image
+                    src={previewUrl}
+                    alt="名片預覽"
+                    fill
+                    sizes="100vw"
+                    className="object-contain"
+                    unoptimized
+                  />
+                </div>
               </div>
             )}
 
@@ -153,8 +164,9 @@ export default function ImportBusinessCardPage() {
 
                     setResultCard(nextCard);
                     saveToLocalStorage(nextCard);
-                  } catch (e: any) {
-                    setError(e?.message || '轉換失敗');
+                  } catch (e: unknown) {
+                    const msg = e instanceof Error ? e.message : String(e);
+                    setError(msg || '轉換失敗');
                   } finally {
                     setLoading(false);
                   }
@@ -164,12 +176,12 @@ export default function ImportBusinessCardPage() {
                 {loading ? '轉換中…' : '一鍵轉換'}
               </button>
 
-              <a
+              <Link
                 href="/"
                 className="px-4 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
               >
                 轉換後去看名片
-              </a>
+              </Link>
             </div>
 
             <div className="mt-3 text-xs text-gray-500">

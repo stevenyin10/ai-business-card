@@ -6,7 +6,7 @@ import {
   type BusinessCard,
 } from '@/lib/businessCard';
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024; // 8MB
 
@@ -84,17 +84,17 @@ export async function POST(req: Request) {
   }
 
   // In Node/Next, multipart values are typically `File`, but be tolerant.
-  const blob: Blob | File = fileValue instanceof Blob ? fileValue : (null as any);
+  const blob = fileValue instanceof Blob ? fileValue : null;
   if (!blob) {
     return new Response('Invalid file', { status: 400 });
   }
 
-  const mediaType = typeof (blob as any).type === 'string' ? (blob as any).type : '';
+  const mediaType = blob.type || '';
   if (!mediaType.startsWith('image/')) {
     return new Response('Unsupported file type (expected image/*)', { status: 400 });
   }
 
-  if (typeof (blob as any).size === 'number' && (blob as any).size > MAX_IMAGE_BYTES) {
+  if (blob.size > MAX_IMAGE_BYTES) {
     return new Response('Image too large (max 8MB)', { status: 413 });
   }
 
@@ -135,9 +135,9 @@ export async function POST(req: Request) {
       temperature: 0,
     });
     object = result.object;
-  } catch (e: any) {
+  } catch (e: unknown) {
     const message =
-      (typeof e?.message === 'string' && e.message) ||
+      (e instanceof Error && e.message) ||
       (typeof e === 'string' && e) ||
       'Card import failed';
     console.error('[card-import] generateObject failed:', e);
