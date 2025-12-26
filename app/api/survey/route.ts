@@ -17,7 +17,7 @@ const SurveySchema = z.object({
 const DynamicSurveySchema = z.object({
   sessionId: z.string().optional().default(''),
   form: z.unknown(),
-  answers: z.record(z.unknown()).default({}),
+  answers: z.record(z.string(), z.unknown()).default({}),
 });
 
 async function getSupabaseAdminClient() {
@@ -123,9 +123,11 @@ export async function POST(req: Request) {
     return new Response('缺少 owner user id', { status: 500 });
   }
 
-  const effectiveSessionId =
-    (parsedDynamic.success ? parsedDynamic.data.sessionId : parsedLegacy.data.sessionId) ||
-    `srv-${crypto.randomUUID()}`;
+  let rawSessionId = '';
+  if (parsedDynamic.success) rawSessionId = parsedDynamic.data.sessionId;
+  else if (parsedLegacy.success) rawSessionId = parsedLegacy.data.sessionId;
+
+  const effectiveSessionId = rawSessionId || `srv-${crypto.randomUUID()}`;
 
   let schemaVersion = 1;
   let payload: unknown = null;
@@ -152,7 +154,7 @@ export async function POST(req: Request) {
       answers,
     };
     content = formatDynamicSurveyContent(form, answers);
-  } else {
+  } else if (parsedLegacy.success) {
     payload = {
       goal: parsedLegacy.data.goal,
       budget: parsedLegacy.data.budget,
@@ -161,6 +163,8 @@ export async function POST(req: Request) {
       note: parsedLegacy.data.note,
     };
     content = formatSurveyContent(parsedLegacy.data);
+  } else {
+    return Response.json({ error: '無效資料' }, { status: 400 });
   }
 
   const { error: surveyError } = await supabase.from('survey').insert({
