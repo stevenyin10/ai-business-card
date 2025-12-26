@@ -13,6 +13,11 @@ import {
   safeParseBusinessCard,
   type BusinessCard,
 } from '@/lib/businessCard';
+import {
+  DEFAULT_SURVEY_SETTINGS,
+  normalizeSurveySettings,
+  type SurveySettings,
+} from '@/lib/surveySettings';
 
 export default function ChatPage() {
   const [mode, setMode] = useState<'chat' | 'survey' | 'card'>('chat');
@@ -110,14 +115,11 @@ export default function ChatPage() {
 
   const lastLeadTriggerKeyRef = useRef<string | null>(null);
 
-  const [surveyForm, setSurveyForm] = useState({
-    goal: '',
-    budget: '',
-    timeline: '',
-    tradeIn: '',
-    note: '',
-  });
+  const [surveyAnswers, setSurveyAnswers] = useState<Record<string, unknown>>({});
   const [surveySubmitting, setSurveySubmitting] = useState(false);
+  const [surveySettings, setSurveySettings] = useState<SurveySettings>(
+    DEFAULT_SURVEY_SETTINGS,
+  );
 
   const { messages, sendMessage, status, error, setMessages } = useChat({
     transport: new TextStreamChatTransport({
@@ -134,6 +136,29 @@ export default function ChatPage() {
       alert('發送失敗，請看 Console 錯誤訊息');
     },
   });
+
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      try {
+        const res = await fetch('/api/survey/settings', {
+          method: 'GET',
+          headers: authAccessToken ? { Authorization: `Bearer ${authAccessToken}` } : undefined,
+        });
+        if (!res.ok) return;
+        const json = (await res.json()) as { form?: unknown };
+        if (!mounted) return;
+        setSurveySettings(normalizeSurveySettings(json.form));
+      } catch {
+        // ignore (fallback to defaults)
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [authAccessToken]);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -212,26 +237,177 @@ export default function ChatPage() {
 
     try {
       setSurveySubmitting(true);
+
+      const requiredQuestions = (surveySettings.questions ?? []).filter((q) => q.required);
+      for (const q of requiredQuestions) {
+        const v = surveyAnswers[q.id];
+        const isEmptyString = typeof v === 'string' && !v.trim();
+        const isEmptyArray = Array.isArray(v) && v.length === 0;
+        const isMissing = v == null || isEmptyString || isEmptyArray;
+        if (isMissing) {
+          alert(`請完成必填題目：${q.title}`);
+          setSurveySubmitting(false);
+          return;
+        }
+      }
+
       const res = await fetch('/api/survey', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...(authAccessToken ? { Authorization: `Bearer ${authAccessToken}` } : {}),
         },
-        body: JSON.stringify({ sessionId, ...surveyForm }),
+        body: JSON.stringify({
+          sessionId,
+          form: surveySettings,
+          answers: surveyAnswers,
+        }),
       });
       if (!res.ok) {
         const text = await res.text().catch(() => '');
         throw new Error(text || '送出失敗');
       }
       setMode('chat');
-      setSurveyForm({ goal: '', budget: '', timeline: '', tradeIn: '', note: '' });
+      setSurveyAnswers({});
     } catch (err) {
       console.error('送出問卷失敗:', err);
       alert('送出失敗，請看 Console 錯誤訊息');
     } finally {
       setSurveySubmitting(false);
     }
+  };
+
+  const renderSurveyQuestion = (q: SurveySettings['questions'][number]) => {
+    const disabled = status === 'streaming' || surveySubmitting;
+    const value = surveyAnswers[q.id];
+
+    const label = (
+      <div className="text-xs font-medium text-gray-600">
+        {q.title}
+        {q.required ? ' *' : ''}
+      </div>
+    );
+
+    const desc = q.description ? (
+      <div className="mt-1 text-xs text-gray-500">{q.description}</div>
+    ) : null;
+
+    if (q.type === 'longText') {
+      return (
+        <label key={q.id} className="block">
+          {label}
+          {desc}
+          <textarea
+            className="mt-2 w-full min-h-[88px] rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+            value={typeof value === 'string' ? value : ''}
+            onChange={(e) => setSurveyAnswers((p) => ({ ...p, [q.id]: e.target.value }))}
+            disabled={disabled}
+          />
+        </label>
+      );
+    }
+
+    if (q.type === 'shortText') {
+      return (
+        <label key={q.id} className="block">
+          {label}
+          {desc}
+          <input
+            className="mt-2 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+            value={typeof value === 'string' ? value : ''}
+            onChange={(e) => setSurveyAnswers((p) => ({ ...p, [q.id]: e.target.value }))}
+            disabled={disabled}
+          />
+        </label>
+      );
+    }
+
+    if (q.type === 'dropdown') {
+      const options = Array.isArray(q.options) ? q.options : [];
+      const current = typeof value === 'string' ? value : '';
+      return (
+        <label key={q.id} className="block">
+          {label}
+          {desc}
+          <select
+            className="mt-2 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+            value={current}
+            onChange={(e) => {
+              const v = e.target.value;
+              // treat the common placeholder as empty
+              const normalized = v === '（未填）' ? '' : v;
+              setSurveyAnswers((p) => ({ ...p, [q.id]: normalized }));
+            }}
+            disabled={disabled}
+          >
+            {options.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+        </label>
+      );
+    }
+
+    if (q.type === 'singleChoice') {
+      const options = Array.isArray(q.options) ? q.options : [];
+      const current = typeof value === 'string' ? value : '';
+      return (
+        <div key={q.id} className="block">
+          {label}
+          {desc}
+          <div className="mt-2 space-y-2">
+            {options.map((opt) => (
+              <label key={opt} className="flex items-center gap-2 text-sm text-gray-900">
+                <input
+                  type="radio"
+                  name={`q-${q.id}`}
+                  className="rounded-full border-gray-300"
+                  checked={current === opt}
+                  onChange={() => setSurveyAnswers((p) => ({ ...p, [q.id]: opt }))}
+                  disabled={disabled}
+                />
+                {opt}
+              </label>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (q.type === 'multipleChoice') {
+      const options = Array.isArray(q.options) ? q.options : [];
+      const current = Array.isArray(value) ? (value as unknown[]) : [];
+      const selected = new Set(current.filter((v) => typeof v === 'string') as string[]);
+      return (
+        <div key={q.id} className="block">
+          {label}
+          {desc}
+          <div className="mt-2 space-y-2">
+            {options.map((opt) => (
+              <label key={opt} className="flex items-center gap-2 text-sm text-gray-900">
+                <input
+                  type="checkbox"
+                  className="rounded border-gray-300"
+                  checked={selected.has(opt)}
+                  onChange={(e) => {
+                    const next = new Set(selected);
+                    if (e.target.checked) next.add(opt);
+                    else next.delete(opt);
+                    setSurveyAnswers((p) => ({ ...p, [q.id]: Array.from(next) }));
+                  }}
+                  disabled={disabled}
+                />
+                {opt}
+              </label>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   // 2. 自定義發送函式
@@ -713,81 +889,12 @@ export default function ChatPage() {
           <div className="flex-1 px-3 sm:px-6 py-6 flex items-start justify-center">
             <div className="w-full max-w-md rounded-2xl sm:rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden">
               <div className="px-5 py-4 border-b border-gray-200">
-                <div className="text-gray-900 font-semibold tracking-tight">購車問卷</div>
-                <div className="mt-1 text-sm text-gray-600">填完後會把內容送到聊天，方便接續服務。</div>
+                <div className="text-gray-900 font-semibold tracking-tight">{surveySettings.title}</div>
+                <div className="mt-1 text-sm text-gray-600">{surveySettings.description}</div>
               </div>
 
               <form className="px-5 py-5 space-y-3" onSubmit={submitSurvey}>
-                <label className="block">
-                  <div className="text-xs font-medium text-gray-600">需求/目的 *</div>
-                  <input
-                    className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
-                    value={surveyForm.goal}
-                    onChange={(e) => setSurveyForm((p) => ({ ...p, goal: e.target.value }))}
-                    placeholder="例如：通勤代步 / 家用 / 休旅 / 省油"
-                    required
-                    disabled={status === 'streaming' || surveySubmitting}
-                  />
-                </label>
-
-                <label className="block">
-                  <div className="text-xs font-medium text-gray-600">預算</div>
-                  <select
-                    className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
-                    value={surveyForm.budget}
-                    onChange={(e) => setSurveyForm((p) => ({ ...p, budget: e.target.value }))}
-                    disabled={status === 'streaming' || surveySubmitting}
-                  >
-                    <option value="">（未填）</option>
-                    <option value="50 萬以下">50 萬以下</option>
-                    <option value="50–80 萬">50–80 萬</option>
-                    <option value="80–120 萬">80–120 萬</option>
-                    <option value="120–200 萬">120–200 萬</option>
-                    <option value="200 萬以上">200 萬以上</option>
-                  </select>
-                </label>
-
-                <label className="block">
-                  <div className="text-xs font-medium text-gray-600">購買時間</div>
-                  <select
-                    className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
-                    value={surveyForm.timeline}
-                    onChange={(e) => setSurveyForm((p) => ({ ...p, timeline: e.target.value }))}
-                    disabled={status === 'streaming' || surveySubmitting}
-                  >
-                    <option value="">（未填）</option>
-                    <option value="1 週內">1 週內</option>
-                    <option value="1 個月內">1 個月內</option>
-                    <option value="1–3 個月">1–3 個月</option>
-                    <option value="3 個月以上">3 個月以上</option>
-                    <option value="尚未確定">尚未確定</option>
-                  </select>
-                </label>
-
-                <label className="block">
-                  <div className="text-xs font-medium text-gray-600">是否舊車換購</div>
-                  <select
-                    className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
-                    value={surveyForm.tradeIn}
-                    onChange={(e) => setSurveyForm((p) => ({ ...p, tradeIn: e.target.value }))}
-                    disabled={status === 'streaming' || surveySubmitting}
-                  >
-                    <option value="">（未填）</option>
-                    <option value="是">是</option>
-                    <option value="否">否</option>
-                    <option value="不確定">不確定</option>
-                  </select>
-                </label>
-
-                <label className="block">
-                  <div className="text-xs font-medium text-gray-600">其他備註</div>
-                  <textarea
-                    className="mt-1 w-full min-h-[88px] rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
-                    value={surveyForm.note}
-                    onChange={(e) => setSurveyForm((p) => ({ ...p, note: e.target.value }))}
-                    disabled={status === 'streaming' || surveySubmitting}
-                  />
-                </label>
+                {(surveySettings.questions ?? []).map((q) => renderSurveyQuestion(q))}
 
                 <div className="flex gap-2 pt-1">
                   <button
@@ -801,9 +908,9 @@ export default function ChatPage() {
                   <button
                     type="submit"
                     className="flex-1 bg-gray-950 hover:bg-gray-900 text-white rounded-full py-2.5 font-medium disabled:bg-gray-400"
-                    disabled={status === 'streaming' || surveySubmitting || !surveyForm.goal.trim()}
+                    disabled={status === 'streaming' || surveySubmitting}
                   >
-                    {surveySubmitting ? '送出中…' : '送出問卷'}
+                    {surveySubmitting ? '送出中…' : surveySettings.submitLabel}
                   </button>
                 </div>
               </form>

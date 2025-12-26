@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createClient } from '@supabase/supabase-js';
 import { readEnv } from '@/lib/runtimeEnv';
+import { normalizeSurveySettings, type SurveySettings } from '@/lib/surveySettings';
 
 export const runtime = 'edge';
 
@@ -11,6 +12,12 @@ const SurveySchema = z.object({
   timeline: z.string().optional().default(''),
   tradeIn: z.string().optional().default(''),
   note: z.string().optional().default(''),
+});
+
+const DynamicSurveySchema = z.object({
+  sessionId: z.string().optional().default(''),
+  form: z.unknown(),
+  answers: z.record(z.unknown()).default({}),
 });
 
 async function getSupabaseAdminClient() {
@@ -70,10 +77,41 @@ function formatSurveyContent(input: z.infer<typeof SurveySchema>): string {
   return lines.join('\n');
 }
 
+function formatDynamicSurveyContent(form: SurveySettings, answers: Record<string, unknown>): string {
+  const lines: string[] = ['【問卷】', form.title ? `標題：${form.title}` : ''].filter(Boolean);
+
+  for (const q of form.questions ?? []) {
+    const raw = answers[q.id];
+
+    let display = '';
+    if (Array.isArray(raw)) {
+      display = raw
+        .map((v) => (typeof v === 'string' ? v : ''))
+        .filter(Boolean)
+        .join('、');
+    } else if (typeof raw === 'string') {
+      display = raw.trim();
+    } else if (raw == null) {
+      display = '';
+    } else {
+      display = String(raw);
+    }
+
+    if (!display) continue;
+    lines.push(`${q.title}：${display}`);
+  }
+
+  return lines.filter(Boolean).join('\n');
+}
+
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
-  const parsed = SurveySchema.safeParse(body);
-  if (!parsed.success) return Response.json({ error: '無效資料' }, { status: 400 });
+
+  const parsedDynamic = DynamicSurveySchema.safeParse(body);
+  const parsedLegacy = SurveySchema.safeParse(body);
+  if (!parsedDynamic.success && !parsedLegacy.success) {
+    return Response.json({ error: '無效資料' }, { status: 400 });
+  }
 
   const supabase = await getSupabaseAdminClient();
   if (!supabase) {
@@ -85,22 +123,51 @@ export async function POST(req: Request) {
     return new Response('缺少 owner user id', { status: 500 });
   }
 
-  const effectiveSessionId = parsed.data.sessionId || `srv-${crypto.randomUUID()}`;
-  const content = formatSurveyContent(parsed.data);
+  const effectiveSessionId =
+    (parsedDynamic.success ? parsedDynamic.data.sessionId : parsedLegacy.data.sessionId) ||
+    `srv-${crypto.randomUUID()}`;
 
-  const payload = {
-    goal: parsed.data.goal,
-    budget: parsed.data.budget,
-    timeline: parsed.data.timeline,
-    tradeIn: parsed.data.tradeIn,
-    note: parsed.data.note,
-  };
+  let schemaVersion = 1;
+  let payload: unknown = null;
+  let content = '';
+
+  if (parsedDynamic.success) {
+    schemaVersion = 2;
+    const form = normalizeSurveySettings(parsedDynamic.data.form);
+    const answers = parsedDynamic.data.answers;
+
+    // Basic required validation
+    for (const q of form.questions ?? []) {
+      if (!q.required) continue;
+      const v = answers[q.id];
+      const isEmptyString = typeof v === 'string' && !v.trim();
+      const isEmptyArray = Array.isArray(v) && v.length === 0;
+      if (v == null || isEmptyString || isEmptyArray) {
+        return Response.json({ error: `缺少必填題目：${q.title}` }, { status: 400 });
+      }
+    }
+
+    payload = {
+      form,
+      answers,
+    };
+    content = formatDynamicSurveyContent(form, answers);
+  } else {
+    payload = {
+      goal: parsedLegacy.data.goal,
+      budget: parsedLegacy.data.budget,
+      timeline: parsedLegacy.data.timeline,
+      tradeIn: parsedLegacy.data.tradeIn,
+      note: parsedLegacy.data.note,
+    };
+    content = formatSurveyContent(parsedLegacy.data);
+  }
 
   const { error: surveyError } = await supabase.from('survey').insert({
     session_id: effectiveSessionId,
     user_id: ownerUserId,
     payload,
-    schema_version: 1,
+    schema_version: schemaVersion,
   });
 
   if (surveyError) {

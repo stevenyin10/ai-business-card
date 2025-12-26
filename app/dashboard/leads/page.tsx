@@ -327,6 +327,12 @@ export default function LeadsDashboardPage() {
                 名片設定
               </Link>
               <Link
+                href="/dashboard/survey"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+              >
+                問卷設定
+              </Link>
+              <Link
                 href="/dashboard/knowledge"
                 className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
               >

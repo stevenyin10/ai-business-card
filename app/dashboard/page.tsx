@@ -72,6 +72,12 @@ export default function DashboardPage() {
               業務後台
             </Link>
             <Link
+              href="/dashboard/survey"
+              className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium"
+            >
+              問卷設定
+            </Link>
+            <Link
               href="/dashboard/knowledge"
               className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium"
             >
