@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI 名片｜自動回覆與名單收集",
-  description: "Apple 風格的極簡銷售頁：AI 自動回覆、名單收集、業務後台一次到位。",
+  title: "Aether Identity | Sovereign Digital Authority",
+  description: "Beyond a business card. A digital steward for the elite.",
 };
 
 export default function RootLayout({

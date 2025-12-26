@@ -1,64 +1,75 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Crown, Zap, Shield, Sparkles, ArrowRight } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Shield, Orbit, Fingerprint, ArrowRight, Sparkles, Lock } from 'lucide-react';
 import Link from 'next/link';
 
-export default function LandingPage() {
+export default function GrandVisionLanding() {
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+
   return (
-    <div className="bg-black text-white min-h-screen selection:bg-blue-500/30">
-      {/* 導覽列 - Apple 風格極簡 */}
-      <nav className="fixed top-0 w-full z-[100] backdrop-blur-xl border-b border-white/5 bg-black/20">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
-          <div className="text-xl font-bold tracking-tighter uppercase">AI.Card Elite</div>
-          <div className="hidden md:flex gap-8 text-sm font-light text-gray-400">
-            <a href="#features" className="hover:text-white transition-colors">
-              功能
+    <div className="bg-black text-white min-h-screen font-sans selection:bg-amber-500/30 overflow-x-hidden">
+      {/* 導覽列：極簡主權 */}
+      <nav className="fixed top-0 w-full z-[100] border-b border-white/5 bg-black/10 backdrop-blur-3xl">
+        <div className="max-w-screen-2xl mx-auto px-6 sm:px-10 h-20 sm:h-24 flex justify-between items-center">
+          <div className="text-sm tracking-widest font-light uppercase opacity-60">Aether. Sovereign</div>
+          <div className="hidden lg:flex gap-10 xl:gap-16 text-[9px] tracking-widest uppercase font-semibold text-gray-500">
+            <a href="#consciousness" className="hover:text-amber-200 transition-colors">
+              Digital Steward
             </a>
-            <a href="#physical" className="hover:text-white transition-colors">
-              實體名片
+            <a href="#manifestation" className="hover:text-amber-200 transition-colors">
+              Physicality
             </a>
-            <a href="#pricing" className="hover:text-white transition-colors">
-              定價
+            <a href="#fortress" className="hover:text-amber-200 transition-colors">
+              The Vault
             </a>
           </div>
-          <Link
-            href="/login"
-            className="bg-white text-black px-5 py-2 rounded-full text-sm font-medium hover:scale-105 transition-transform"
-          >
-            開始使用
-          </Link>
+          <div className="flex items-center gap-4 sm:gap-6">
+            <Link
+              href="/login"
+              className="text-[10px] tracking-wide uppercase text-gray-400 hover:text-white transition-colors"
+            >
+              Login
+            </Link>
+            <Link
+              href="/login"
+              className="text-[10px] tracking-widest uppercase bg-white text-black px-6 sm:px-10 py-3 sm:py-4 rounded-full font-bold hover:invert transition-all duration-700 shadow-2xl"
+            >
+              索取通行證
+            </Link>
+          </div>
         </div>
       </nav>
 
-      {/* Hero 區塊 */}
-      <section className="relative pt-44 pb-32 px-6 overflow-hidden">
-        {/* 背景光暈 */}
-        <div className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-[20%] right-0 w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Hero Section：宏大敘事 */}
+      <section className="relative min-h-screen flex flex-col justify-center px-6 sm:px-10">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(20,20,50,0.15),transparent)] pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-6xl md:text-[11rem] font-bold leading-[0.85] tracking-tighter mb-12">
-              ELITE <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-gray-400 to-gray-700">
-                IDENTITY.
+        <div className="max-w-screen-2xl mx-auto w-full relative z-10">
+          <motion.div style={{ opacity }}>
+            <span className="text-amber-500/50 text-[10px] tracking-[0.8em] uppercase mb-12 block">
+              Establishing Digital Dominance
+            </span>
+            <h1 className="text-6xl sm:text-7xl md:text-[12rem] xl:text-[15rem] font-serif font-light leading-[0.75] tracking-tighter mb-20 italic">
+              Absolute <br />
+              <span className="not-italic font-sans font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-white/5">
+                Authority.
               </span>
             </h1>
 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
-              <p className="text-xl md:text-2xl text-gray-400 max-w-xl font-light leading-relaxed">
-                超越名片，定義您的數位權威。結合 AI 禮賓系統與頂級工藝，專為 1% 的業務領袖量身打造。
+            <div className="flex flex-col md:flex-row gap-12 lg:gap-20 items-start md:items-end justify-between">
+              <p className="text-lg sm:text-xl md:text-3xl text-gray-500 max-w-2xl font-extralight leading-relaxed tracking-wide italic">
+                「我們不提供工具，我們構築邊界。」這是一場關於身分、權力與意識延伸的數位革命。
               </p>
-              <div className="flex gap-4">
-                <button className="group flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-blue-500 transition-colors shadow-lg">
-                  預訂專屬名片
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              <div className="flex flex-col gap-6 w-full md:w-auto">
+                <button className="group flex items-center justify-between border border-white/20 px-8 sm:px-12 py-5 sm:py-6 rounded-full text-[11px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all duration-1000">
+                  <span>開啟您的數位遺產</span>
+                  <ArrowRight size={16} className="ml-6 group-hover:translate-x-2 transition-transform" />
+                </button>
+                <button className="text-[9px] tracking-[0.5em] uppercase text-amber-500/60 hover:text-amber-500 text-center transition-colors">
+                  諮詢數位執事架構師 —
                 </button>
               </div>
             </div>
@@ -66,71 +77,156 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Bento Grid 展示區 */}
-      <section id="features" className="py-24 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[300px] md:auto-rows-[350px]">
-            {/* AI 助手模塊 */}
-            <div className="md:col-span-8 relative bg-neutral-950 border border-white/5 rounded-3xl p-10 overflow-hidden group">
-              <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <Sparkles className="text-blue-500 mb-6" size={32} />
-              <h3 className="text-4xl font-medium mb-4">24/7 AI 數位特助</h3>
-              <p className="text-gray-400 max-w-md text-lg font-light">
-                不僅是展示，更是您的數位分身。自動過濾詢問、篩選高品質 Leads，讓您在休息時仍在運作。
-              </p>
-              <div className="absolute bottom-10 right-10 w-48 h-20 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-xs text-gray-400">
-                「已為您安排下午與張先生的賞車預約。」
-              </div>
-            </div>
-
-            {/* 實體卡片模塊 */}
-            <div
-              id="physical"
-              className="md:col-span-4 bg-neutral-900 border border-white/5 rounded-3xl p-8 flex flex-col justify-between group overflow-hidden"
-            >
-              <div>
-                <Crown className="text-amber-500 mb-4" size={28} />
-                <h3 className="text-2xl font-medium">極致工藝實體版</h3>
-              </div>
-              <div className="relative h-40 transform group-hover:rotate-6 transition-transform duration-700">
-                <div className="w-full h-full bg-gradient-to-tr from-gray-800 to-gray-900 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center">
-                  <span className="text-[10px] tracking-[0.3em] text-gray-500 uppercase">
-                    Matte Black Metal
-                  </span>
+      {/* 核心佈局：打破網格的 Readymag 風格 */}
+      <section className="py-40 sm:py-60 px-6 sm:px-10">
+        <div className="max-w-screen-2xl mx-auto">
+          {/* 層級一：自主意識延伸 */}
+          <div id="consciousness" className="grid lg:grid-cols-12 gap-12 lg:gap-20 mb-40 sm:mb-60 items-center">
+            <div className="lg:col-span-6 relative">
+              <motion.div
+                whileInView={{ opacity: [0, 1], x: [-50, 0] }}
+                transition={{ duration: 1 }}
+                className="text-[6rem] sm:text-[9rem] md:text-[12rem] font-serif font-black text-white/5 absolute -top-28 sm:-top-40 -left-6 sm:-left-20 pointer-events-none"
+              >
+                STEWARD
+              </motion.div>
+              <Orbit className="text-amber-500/20 mb-10" size={80} />
+              <h2 className="text-5xl sm:text-6xl font-light mb-10 italic">The Autonomous Steward</h2>
+              <div className="space-y-8 text-gray-400 text-lg sm:text-xl font-extralight leading-loose">
+                <p>
+                  您的名片不應是靜止的符號，而是一個擁有自主神經的「執事」。基於 RAG 技術，它封裝了您的商業哲學，24/7
+                  在數位邊際為您進行精準的社交預熱。
+                </p>
+                <div className="pt-10 flex flex-wrap gap-4">
+                  <button className="bg-amber-600/10 border border-amber-600/30 text-amber-500 px-10 py-4 rounded-full text-[10px] tracking-[0.3em] uppercase hover:bg-amber-600 hover:text-white transition-all">
+                    注入您的意識
+                  </button>
+                  <button className="px-10 py-4 rounded-full text-[10px] tracking-[0.3em] uppercase border border-white/10 hover:border-white transition-all">
+                    技術白皮書
+                  </button>
                 </div>
               </div>
             </div>
-
-            {/* 隱私安全模塊 */}
-            <div className="md:col-span-4 bg-white rounded-3xl p-8 flex flex-col justify-between">
-              <Shield className="text-black mb-4" size={28} />
-              <div>
-                <h3 className="text-2xl text-black font-semibold mb-2">隱私主權</h3>
-                <p className="text-gray-600 text-sm">金融級數據加密隔離，只有您授權的人，才能看見核心資訊。</p>
+            <div className="lg:col-span-6 flex justify-center">
+              <div className="w-full aspect-square bg-neutral-950 rounded-[64px] sm:rounded-[100px] border border-white/5 flex items-center justify-center relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent" />
+                <Sparkles
+                  size={120}
+                  className="text-gray-800 group-hover:text-blue-500/20 transition-colors duration-1000"
+                />
               </div>
             </div>
+          </div>
 
-            {/* 數據追蹤模塊 */}
-            <div id="pricing" className="md:col-span-8 bg-blue-600 rounded-3xl p-10 relative overflow-hidden group">
-              <Zap className="text-white mb-6" size={28} />
-              <h3 className="text-4xl text-white font-medium mb-4">精準洞察</h3>
-              <p className="text-blue-100 text-lg opacity-80 max-w-sm">實時追蹤訪客互動路徑，在最合適的時機發動聯繫。</p>
-              <div className="absolute bottom-[-40px] right-[-40px] w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
+          {/* 層級二：物理權威的降臨 */}
+          <div id="manifestation" className="grid lg:grid-cols-12 gap-12 lg:gap-20 mb-40 sm:mb-60">
+            <div className="lg:col-span-4 order-2 lg:order-1">
+              <div className="h-full bg-gradient-to-b from-neutral-900 to-black border border-white/5 rounded-[56px] sm:rounded-[80px] p-10 sm:p-20 flex flex-col justify-between">
+                <Fingerprint size={48} className="text-amber-500/40" />
+                <div>
+                  <h3 className="text-4xl font-light mb-8">
+                    Tactile <br />Authority.
+                  </h3>
+                  <p className="text-gray-500 font-extralight mb-12">
+                    金屬的重量、磨砂的冷冽，這是權力在物理世界的投影。內嵌極致加密 NFC 晶片。
+                  </p>
+                  <button className="w-full bg-white text-black py-6 rounded-full text-[10px] tracking-[0.4em] uppercase font-bold hover:scale-[0.98] transition-transform">
+                    定製您的實體權限
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-8 order-1 lg:order-2">
+              <div className="relative group">
+                <h2 className="text-[4rem] sm:text-[6rem] md:text-[10rem] font-bold tracking-tighter leading-none opacity-10 group-hover:opacity-20 transition-opacity">
+                  MATTE
+                  <br />
+                  TITANIUM
+                </h2>
+                <p className="text-xl sm:text-2xl text-gray-500 mt-10 max-w-xl font-extralight italic">
+                  「當名片落地時，對話已經結束。」這是一份無需言語的契約。
+                </p>
+                <div className="mt-12 flex gap-6">
+                  <button className="border-b border-amber-500 text-amber-500 pb-2 text-xs tracking-widest uppercase hover:text-white hover:border-white transition-all">
+                    探索材質工藝 —
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 層級三：數據主權堡壘 */}
+          <div id="fortress" className="bg-white text-black rounded-[64px] sm:rounded-[100px] p-10 sm:p-20 md:p-32 relative overflow-hidden">
+            <div className="max-w-4xl relative z-10">
+              <Lock size={60} className="mb-12 opacity-20" />
+              <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-12">Sovereign Data Fortress.</h2>
+              <p className="text-xl sm:text-2xl md:text-3xl font-light leading-relaxed mb-16 text-gray-700">
+                我們建立在絕對的孤立之上。您的數據不屬於雲端，它屬於您的個人隔離層。透過 Supabase 的金融級技術，確保每一條社交紀錄都僅為您服務。
+              </p>
+              <div className="flex flex-wrap gap-6">
+                <button className="bg-black text-white px-10 sm:px-12 py-5 sm:py-6 rounded-full text-xs tracking-[0.3em] uppercase font-bold hover:invert transition-all">
+                  建立您的數據領地
+                </button>
+                <button className="border border-black/20 px-10 sm:px-12 py-5 sm:py-6 rounded-full text-xs tracking-[0.3em] uppercase hover:bg-black hover:text-white transition-all">
+                  數據安全合規報告
+                </button>
+              </div>
+            </div>
+            <div className="absolute right-[-10%] bottom-[-10%] opacity-5">
+              <Shield size={600} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* 底部行動呼籲 */}
-      <footer className="py-20 border-t border-white/5 text-center">
-        <p className="text-sm tracking-widest text-gray-600 uppercase mb-4">專為精英設計</p>
-        <h2 className="text-4xl md:text-6xl mb-10">加入頂尖業務行列</h2>
-        <Link
-          href="/login"
-          className="inline-block border border-white/20 px-12 py-4 rounded-full hover:bg-white hover:text-black transition-colors"
-        >
-          立即預約諮詢
-        </Link>
+      {/* 結尾 CTA 矩陣：數位豪宅的出口與入口 */}
+      <footer className="py-40 sm:py-60 px-6 sm:px-10 border-t border-white/5 relative bg-black">
+        <div className="max-w-7xl mx-auto text-center">
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 2 }}>
+            <span className="text-amber-500/40 text-[10px] tracking-[1em] uppercase mb-16 block">The Final Threshold</span>
+            <h2 className="text-6xl sm:text-7xl md:text-[10rem] xl:text-[12rem] font-serif font-light mb-20 sm:mb-32 tracking-tighter italic leading-none">
+              Ascend to <br />
+              <span className="not-italic font-sans font-bold text-white">Sovereignty.</span>
+            </h2>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="p-10 sm:p-12 border border-white/5 rounded-3xl hover:bg-white/5 transition-colors group">
+                <h4 className="text-[10px] tracking-[0.4em] uppercase text-gray-500 mb-8">個人專屬方案</h4>
+                <p className="text-2xl font-light mb-10">數位執事系統、AI 知識庫注入。</p>
+                <Link
+                  href="/login"
+                  className="block w-full py-5 rounded-full border border-white/10 group-hover:border-amber-500 transition-all text-[10px] tracking-[0.2em] uppercase"
+                >
+                  立即入駐
+                </Link>
+              </div>
+              <div className="p-10 sm:p-12 border border-amber-500/20 rounded-3xl bg-amber-500/5 shadow-2xl scale-105">
+                <h4 className="text-[10px] tracking-[0.4em] uppercase text-amber-500 mb-8">旗艦尊榮方案</h4>
+                <p className="text-2xl font-light mb-10">鈦金屬實體名片、7-11 專屬物流、高階 AI 協商模式。</p>
+                <Link
+                  href="/login"
+                  className="block w-full py-5 rounded-full bg-amber-600 text-white text-[10px] tracking-[0.2em] uppercase font-bold"
+                >
+                  索取優先權
+                </Link>
+              </div>
+              <div className="p-10 sm:p-12 border border-white/5 rounded-3xl hover:bg-white/5 transition-colors group">
+                <h4 className="text-[10px] tracking-[0.4em] uppercase text-gray-500 mb-8">企業領袖方案</h4>
+                <p className="text-2xl font-light mb-10">多人團隊矩陣、數據分析儀表板。</p>
+                <Link
+                  href="/login"
+                  className="block w-full py-5 rounded-full border border-white/10 group-hover:border-white transition-all text-[10px] tracking-[0.2em] uppercase"
+                >
+                  聯繫架構師
+                </Link>
+              </div>
+            </div>
+
+            <div className="mt-24 sm:mt-40 opacity-20 text-[10px] tracking-[0.5em] uppercase">
+              © 2025 Aether Identity. For the elite, by the elite.
+            </div>
+          </motion.div>
+        </div>
       </footer>
     </div>
   );
