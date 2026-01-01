@@ -44,6 +44,12 @@ export default function SurveySettingsPage() {
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<string | null>(null);
 
+  const labelClass = 'text-xs font-medium text-white/70';
+  const inputClass =
+    'mt-1 w-full rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/30 outline-none focus:border-amber-500/30 focus:ring-2 focus:ring-amber-500/20';
+  const textareaClass =
+    'mt-1 w-full rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/30 outline-none focus:border-amber-500/30 focus:ring-2 focus:ring-amber-500/20';
+
   useEffect(() => {
     let mounted = true;
 
@@ -190,31 +196,31 @@ export default function SurveySettingsPage() {
   };
 
   return (
-    <div className="min-h-[100svh] bg-gray-50">
+    <div className="min-h-[100svh] bg-black text-white selection:bg-amber-500/30 overflow-x-hidden">
       <div className="mx-auto max-w-5xl min-h-[100svh] flex flex-col">
-        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-gray-200">
-          <div className="px-4 sm:px-6 py-4 text-gray-900 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-3xl border-b border-white/10">
+          <div className="px-4 sm:px-6 py-4 flex items-center justify-between">
             <div>
               <div className="font-semibold tracking-tight">問卷設定</div>
-              <div className="text-xs text-gray-500 mt-0.5">{userEmail ? `登入中：${userEmail}` : ''}</div>
+              <div className="text-xs text-white/50 mt-0.5">{userEmail ? `登入中：${userEmail}` : ''}</div>
             </div>
 
             <div className="flex items-center gap-2">
               <Link
                 href="/dashboard/leads"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 業務後台
               </Link>
               <Link
                 href="/dashboard/knowledge"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 知識庫
               </Link>
               <Link
                 href="/dashboard"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 名片設定
               </Link>
@@ -224,7 +230,7 @@ export default function SurveySettingsPage() {
                   await supabase.auth.signOut();
                   router.replace('/login');
                 }}
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 登出
               </button>
@@ -233,16 +239,16 @@ export default function SurveySettingsPage() {
         </div>
 
         <div className="flex-1 px-4 sm:px-6 py-6">
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
               <div>
                 <div className="font-semibold tracking-tight">前台問卷設定</div>
-                <div className="text-xs text-gray-500 mt-0.5">像 Google 表單一樣編輯題目/題型，並影響訪客在 /chat 看到的問卷。</div>
+                <div className="text-xs text-white/50 mt-0.5">像 Google 表單一樣編輯題目/題型，並影響訪客在 /chat 看到的問卷。</div>
               </div>
               <div className="flex items-center gap-2">
                 <Link
                   href="/dashboard/survey/responses"
-                  className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                  className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
                 >
                   查看作答
                 </Link>
@@ -250,7 +256,7 @@ export default function SurveySettingsPage() {
                   type="button"
                   onClick={reload}
                   disabled={loading}
-                  className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 disabled:opacity-60"
+                  className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15 disabled:opacity-50"
                 >
                   {loading ? '讀取中…' : '重新載入'}
                 </button>
@@ -258,7 +264,7 @@ export default function SurveySettingsPage() {
                   type="button"
                   onClick={save}
                   disabled={saving}
-                  className="text-sm font-medium px-3 py-1.5 rounded-full bg-gray-950 text-white hover:bg-gray-900 disabled:opacity-60"
+                  className="text-sm font-medium px-3 py-1.5 rounded-full bg-white text-black hover:invert disabled:opacity-50"
                 >
                   {saving ? '保存中…' : '保存'}
                 </button>
@@ -266,30 +272,30 @@ export default function SurveySettingsPage() {
             </div>
 
             {error ? (
-              <div className="m-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="m-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                 {error}
               </div>
             ) : null}
 
             {savedAt ? (
-              <div className="px-5 pt-4 text-xs text-gray-500">最後更新：{new Date(savedAt).toLocaleString('zh-TW')}</div>
+              <div className="px-5 pt-4 text-xs text-white/50">最後更新：{new Date(savedAt).toLocaleString('zh-TW')}</div>
             ) : null}
 
             <div className="px-5 py-5 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <label className="block">
-                  <div className="text-xs font-medium text-gray-600">標題</div>
+                  <div className={labelClass}>標題</div>
                   <input
-                    className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                    className={inputClass}
                     value={form.title}
                     onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
                   />
                 </label>
 
                 <label className="block">
-                  <div className="text-xs font-medium text-gray-600">送出按鈕文字</div>
+                  <div className={labelClass}>送出按鈕文字</div>
                   <input
-                    className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                    className={inputClass}
                     value={form.submitLabel}
                     onChange={(e) => setForm((p) => ({ ...p, submitLabel: e.target.value }))}
                   />
@@ -297,17 +303,17 @@ export default function SurveySettingsPage() {
               </div>
 
               <label className="block">
-                <div className="text-xs font-medium text-gray-600">說明文字</div>
+                <div className={labelClass}>說明文字</div>
                 <textarea
-                  className="mt-1 w-full min-h-[72px] rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                  className={`${textareaClass} min-h-[72px]`}
                   value={form.description}
                   onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
                 />
               </label>
 
               <div className="pt-2">
-                <div className="text-sm font-semibold tracking-tight text-gray-900">題目</div>
-                <div className="mt-1 text-xs text-gray-500">至少要有 1 題必填（避免送出空白問卷）。</div>
+                <div className="text-sm font-semibold tracking-tight text-white">題目</div>
+                <div className="mt-1 text-xs text-white/50">至少要有 1 題必填（避免送出空白問卷）。</div>
               </div>
 
               <div className="space-y-4">
@@ -315,19 +321,19 @@ export default function SurveySettingsPage() {
                   const typeInfo = QUESTION_TYPES.find((t) => t.value === q.type);
                   const optionText = Array.isArray(q.options) ? q.options.join('\n') : '';
                   return (
-                    <div key={q.id} className="rounded-2xl border border-gray-200 p-4">
+                    <div key={q.id} className="rounded-2xl border border-white/10 bg-black/30 p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-white">
                             題目 {idx + 1}{typeInfo ? ` · ${typeInfo.label}` : ''}
                           </div>
-                          <div className="text-xs text-gray-500 mt-0.5">id：{q.id}</div>
+                          <div className="text-xs text-white/50 mt-0.5">id：{q.id}</div>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => moveQuestion(idx, -1)}
-                            className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 disabled:opacity-60"
+                            className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15 disabled:opacity-50"
                             disabled={idx === 0}
                           >
                             上移
@@ -335,7 +341,7 @@ export default function SurveySettingsPage() {
                           <button
                             type="button"
                             onClick={() => moveQuestion(idx, 1)}
-                            className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 disabled:opacity-60"
+                            className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15 disabled:opacity-50"
                             disabled={idx === form.questions.length - 1}
                           >
                             下移
@@ -343,7 +349,7 @@ export default function SurveySettingsPage() {
                           <button
                             type="button"
                             onClick={() => removeQuestion(idx)}
-                            className="text-sm font-medium px-3 py-1.5 rounded-full border border-red-200 bg-white hover:bg-red-50 active:bg-red-100 text-red-700"
+                            className="text-sm font-medium px-3 py-1.5 rounded-full border border-red-500/30 bg-red-500/10 hover:bg-red-500/15 active:bg-red-500/20 text-red-200"
                           >
                             刪除
                           </button>
@@ -352,9 +358,9 @@ export default function SurveySettingsPage() {
 
                       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <label className="block">
-                          <div className="text-xs font-medium text-gray-600">題型</div>
+                          <div className={labelClass}>題型</div>
                           <select
-                            className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                            className={inputClass}
                             value={q.type}
                             onChange={(e) => setQuestionType(idx, e.target.value as SurveyQuestionType)}
                           >
@@ -367,11 +373,11 @@ export default function SurveySettingsPage() {
                         </label>
 
                         <label className="block">
-                          <div className="text-xs font-medium text-gray-600">必填</div>
-                          <div className="mt-2 flex items-center gap-2 text-sm text-gray-700">
+                          <div className={labelClass}>必填</div>
+                          <div className="mt-2 flex items-center gap-2 text-sm text-white/70">
                             <input
                               type="checkbox"
-                              className="rounded border-gray-300"
+                              className="rounded border-white/20 bg-white/5"
                               checked={!!q.required}
                               onChange={(e) =>
                                 setForm((p) => ({
@@ -390,18 +396,18 @@ export default function SurveySettingsPage() {
                       </div>
 
                       <label className="block mt-4">
-                        <div className="text-xs font-medium text-gray-600">題目文字</div>
+                        <div className={labelClass}>題目文字</div>
                         <input
-                          className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                          className={inputClass}
                           value={q.title}
                           onChange={(e) => updateQuestion(idx, { title: e.target.value })}
                         />
                       </label>
 
                       <label className="block mt-3">
-                        <div className="text-xs font-medium text-gray-600">描述（可留空）</div>
+                        <div className={labelClass}>描述（可留空）</div>
                         <input
-                          className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                          className={inputClass}
                           value={q.description ?? ''}
                           onChange={(e) => updateQuestion(idx, { description: e.target.value })}
                         />
@@ -409,9 +415,9 @@ export default function SurveySettingsPage() {
 
                       {isOptionType(q.type) ? (
                         <label className="block mt-3">
-                          <div className="text-xs font-medium text-gray-600">選項（每行一個）</div>
+                          <div className={labelClass}>選項（每行一個）</div>
                           <textarea
-                            className="mt-1 w-full min-h-[96px] rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                            className={`${textareaClass} min-h-[96px]`}
                             value={optionText}
                             onChange={(e) => setQuestionOptionsText(idx, e.target.value)}
                           />
@@ -424,7 +430,7 @@ export default function SurveySettingsPage() {
                 <button
                   type="button"
                   onClick={addQuestion}
-                  className="w-full rounded-2xl border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 px-4 py-3 text-sm font-medium text-gray-900"
+                  className="w-full rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15 px-4 py-3 text-sm font-medium text-white"
                 >
                   + 新增題目
                 </button>

@@ -304,37 +304,37 @@ export default function LeadsDashboardPage() {
   }, [selectedSessionId]);
 
   return (
-    <div className="min-h-[100svh] bg-gray-50">
+    <div className="min-h-[100svh] bg-black text-white selection:bg-amber-500/30 overflow-x-hidden">
       <div className="mx-auto max-w-6xl min-h-[100svh] flex flex-col">
-        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-gray-200">
-          <div className="px-4 sm:px-6 py-4 text-gray-900 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-3xl border-b border-white/10">
+          <div className="px-4 sm:px-6 py-4 flex items-center justify-between">
             <div>
               <div className="font-semibold tracking-tight">業務後台</div>
-              <div className="text-xs text-gray-500 mt-0.5">{userEmail ? `登入中：${userEmail}` : ''}</div>
+              <div className="text-xs text-white/50 mt-0.5">{userEmail ? `登入中：${userEmail}` : ''}</div>
             </div>
 
             <div className="flex items-center gap-2">
               <Link
                 href="/"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 回首頁
               </Link>
               <Link
                 href="/dashboard"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 名片設定
               </Link>
               <Link
                 href="/dashboard/survey"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 問卷設定
               </Link>
               <Link
                 href="/dashboard/knowledge"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 知識庫
               </Link>
@@ -344,7 +344,7 @@ export default function LeadsDashboardPage() {
                   await supabase.auth.signOut();
                   router.replace('/login');
                 }}
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 登出
               </button>
@@ -353,18 +353,18 @@ export default function LeadsDashboardPage() {
         </div>
 
         <div className="flex-1 px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden lg:col-span-12">
-            <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm overflow-hidden lg:col-span-12">
+            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
               <div>
                 <div className="font-semibold tracking-tight">聊天 Prompt 設定</div>
-                <div className="text-xs text-gray-500 mt-0.5">這段會附加在系統提示詞後面，讓 AI 更符合你的銷售場景。</div>
+                <div className="text-xs text-white/50 mt-0.5">這段會附加在系統提示詞後面，讓 AI 更符合你的銷售場景。</div>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={fetchSystemPrompt}
                   disabled={loadingSystemPrompt}
-                  className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 disabled:opacity-60"
+                  className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15 disabled:opacity-50"
                 >
                   {loadingSystemPrompt ? '讀取中…' : '重新載入'}
                 </button>
@@ -372,7 +372,7 @@ export default function LeadsDashboardPage() {
                   type="button"
                   onClick={saveSystemPrompt}
                   disabled={savingSystemPrompt}
-                  className="text-sm font-medium px-3 py-1.5 rounded-full bg-gray-950 text-white hover:bg-gray-900 disabled:opacity-60"
+                  className="text-sm font-medium px-3 py-1.5 rounded-full bg-white text-black hover:invert disabled:opacity-50"
                 >
                   {savingSystemPrompt ? '保存中…' : '保存'}
                 </button>
@@ -381,7 +381,7 @@ export default function LeadsDashboardPage() {
 
             <div className="px-5 py-4">
               {systemPromptError ? (
-                <div className="mb-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <div className="mb-3 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                   {systemPromptError}
                 </div>
               ) : null}
@@ -391,22 +391,22 @@ export default function LeadsDashboardPage() {
                 onChange={(e) => setSystemPrompt(e.target.value)}
                 rows={6}
                 placeholder="例如：\n- 你是某品牌汽車的資深銷售顧問\n- 價格請以本月活動為準，不確定就先問預算\n- 若客人提到試乘，先詢問地點與時間並引導留聯絡方式"
-                className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900"
+                className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-amber-500/30 focus:ring-2 focus:ring-amber-500/20"
               />
             </div>
           </div>
 
           {/* Visitors (sessions) */}
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden lg:col-span-3">
-            <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm overflow-hidden lg:col-span-3">
+            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
               <div 
                 className="flex items-center gap-2 cursor-pointer select-none"
                 onClick={() => setIsSessionsOpen(!isSessionsOpen)}
               >
-                {isSessionsOpen ? <ChevronDown className="w-5 h-5 text-gray-500" /> : <ChevronRight className="w-5 h-5 text-gray-500" />}
+                {isSessionsOpen ? <ChevronDown className="w-5 h-5 text-white/50" /> : <ChevronRight className="w-5 h-5 text-white/50" />}
                 <div>
-                  <div className="text-gray-900 font-semibold tracking-tight">訪客（visits）</div>
-                  <div className="text-sm text-gray-600 mt-1">代表曾聊天/送出問卷的使用者。</div>
+                  <div className="font-semibold tracking-tight">訪客（visits）</div>
+                  <div className="text-sm text-white/70 mt-1">代表曾聊天/送出問卷的使用者。</div>
                 </div>
               </div>
               <button
@@ -415,7 +415,7 @@ export default function LeadsDashboardPage() {
                   e.stopPropagation();
                   refreshSessions();
                 }}
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
                 disabled={loadingSessions}
               >
                 重新整理
@@ -425,17 +425,17 @@ export default function LeadsDashboardPage() {
             {isSessionsOpen && (
               <>
             {sessionsError && (
-              <div className="m-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="m-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                 {sessionsError}
               </div>
             )}
 
             <div className="p-4">
-              <div className="rounded-2xl border border-gray-200 bg-gray-50 p-2 max-h-[620px] overflow-y-auto">
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-2 max-h-[620px] overflow-y-auto">
                 {loadingSessions ? (
-                  <div className="text-sm text-gray-500 p-2">讀取中…</div>
+                  <div className="text-sm text-white/50 p-2">讀取中…</div>
                 ) : sessions.length === 0 ? (
-                  <div className="text-sm text-gray-500 p-2">尚無 session</div>
+                  <div className="text-sm text-white/50 p-2">尚無 session</div>
                 ) : (
                   <div className="space-y-2">
                     {sessions.map((s) => {
@@ -450,14 +450,14 @@ export default function LeadsDashboardPage() {
                           }}
                           className={
                             active
-                              ? 'w-full text-left rounded-2xl border border-gray-950 bg-gray-950 text-white px-3 py-2'
-                              : 'w-full text-left rounded-2xl border border-gray-200 bg-white hover:bg-gray-50 px-3 py-2'
+                              ? 'w-full text-left rounded-2xl border border-white/10 bg-white/10 text-white px-3 py-2'
+                              : 'w-full text-left rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2'
                           }
                         >
-                          <div className={active ? 'text-sm font-medium' : 'text-sm font-medium text-gray-900'}>
+                          <div className={active ? 'text-sm font-medium' : 'text-sm font-medium text-white'}>
                             {s.sessionId}
                           </div>
-                          <div className={active ? 'text-xs opacity-80 mt-0.5' : 'text-xs text-gray-500 mt-0.5'}>
+                          <div className={active ? 'text-xs opacity-80 mt-0.5' : 'text-xs text-white/50 mt-0.5'}>
                             最後活動：{s.lastAt ? new Date(s.lastAt).toLocaleString('zh-TW') : '-'}
                           </div>
                         </button>
@@ -472,16 +472,16 @@ export default function LeadsDashboardPage() {
           </div>
 
           {/* Chat + Survey timeline */}
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden lg:col-span-6">
-            <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm overflow-hidden lg:col-span-6">
+            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
               <div 
                 className="flex items-center gap-2 cursor-pointer select-none"
                 onClick={() => setIsChatOpen(!isChatOpen)}
               >
-                {isChatOpen ? <ChevronDown className="w-5 h-5 text-gray-500" /> : <ChevronRight className="w-5 h-5 text-gray-500" />}
+                {isChatOpen ? <ChevronDown className="w-5 h-5 text-white/50" /> : <ChevronRight className="w-5 h-5 text-white/50" />}
                 <div>
-                  <div className="text-gray-900 font-semibold tracking-tight">聊天 / 問卷答覆</div>
-                  <div className="text-sm text-gray-600 mt-1">依選取的 session 顯示時間軸。</div>
+                  <div className="font-semibold tracking-tight">聊天 / 問卷答覆</div>
+                  <div className="text-sm text-white/70 mt-1">依選取的 session 顯示時間軸。</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -494,8 +494,8 @@ export default function LeadsDashboardPage() {
                     }}
                     className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
                       autoReplyEnabled
-                        ? 'border-green-200 bg-green-50 text-green-700 hover:bg-green-100'
-                        : 'border-gray-300 bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-200 hover:bg-emerald-500/15'
+                        : 'border-white/15 bg-white/5 text-white/60 hover:bg-white/10'
                     }`}
                   >
                     {autoReplyEnabled ? 'AI 自動回覆：開啟' : 'AI 自動回覆：關閉'}
@@ -507,7 +507,7 @@ export default function LeadsDashboardPage() {
                     e.stopPropagation();
                     refreshMessages(selectedSessionId);
                   }}
-                  className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                  className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
                   disabled={!selectedSessionId || loadingMessages}
                 >
                   重新整理
@@ -518,20 +518,20 @@ export default function LeadsDashboardPage() {
             {isChatOpen && (
               <>
             {messagesError && (
-              <div className="m-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="m-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                 {messagesError}
               </div>
             )}
 
             <div className="px-4 py-4">
               {!selectedSessionId ? (
-                <div className="text-sm text-gray-500">請先從左側選擇一個 session。</div>
+                <div className="text-sm text-white/50">請先從左側選擇一個 session。</div>
               ) : (
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-3 max-h-[620px] overflow-y-auto space-y-2">
+                <div className="rounded-2xl border border-white/10 bg-black/30 p-3 max-h-[620px] overflow-y-auto space-y-2">
                   {loadingMessages ? (
-                    <div className="text-sm text-gray-500">讀取中…</div>
+                    <div className="text-sm text-white/50">讀取中…</div>
                   ) : messages.length === 0 ? (
-                    <div className="text-sm text-gray-500">尚無訊息</div>
+                    <div className="text-sm text-white/50">尚無訊息</div>
                   ) : (
                     messages.map((m) => {
                       const isUser = m.role === 'user';
@@ -546,20 +546,20 @@ export default function LeadsDashboardPage() {
                           <div
                             className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm whitespace-pre-line ${
                               isUser
-                                ? 'bg-gray-950 text-white'
+                                ? 'bg-white text-black'
                                 : isAgent
-                                  ? 'bg-blue-50 border border-blue-200 text-blue-900'
+                                  ? 'bg-amber-500/10 border border-amber-500/30 text-amber-100'
                                   : isSurvey
-                                    ? 'bg-white border border-gray-200 text-gray-900'
-                                    : 'bg-white border border-gray-200 text-gray-900'
+                                    ? 'bg-white/5 border border-white/10 text-white'
+                                    : 'bg-white/5 border border-white/10 text-white'
                             }`}
                           >
                             {isSurvey ? (
-                              <div className="text-[11px] font-medium text-gray-500 mb-1">問卷</div>
+                              <div className="text-[11px] font-medium text-white/60 mb-1">問卷</div>
                             ) : isAgent ? (
-                              <div className="text-[11px] font-medium text-blue-600 mb-1">業務介入</div>
+                              <div className="text-[11px] font-medium text-amber-200/80 mb-1">業務介入</div>
                             ) : isAssistant ? (
-                              <div className="text-[11px] font-medium text-gray-500 mb-1">AI</div>
+                              <div className="text-[11px] font-medium text-white/60 mb-1">AI</div>
                             ) : null}
                             {m.content}
                             <div className="mt-1 text-[10px] opacity-60">
@@ -581,21 +581,21 @@ export default function LeadsDashboardPage() {
                     onChange={(e) => setAgentInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && !e.nativeEvent.isComposing && sendAgentMessage()}
                     placeholder="輸入訊息介入對話..."
-                    className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm focus:border-gray-900 focus:outline-none"
+                    className="flex-1 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder:text-white/30 outline-none focus:border-amber-500/30 focus:ring-2 focus:ring-amber-500/20"
                     disabled={sendingAgentMessage}
                   />
                   <button
                     type="button"
                     onClick={sendAgentMessage}
                     disabled={sendingAgentMessage || !agentInput.trim()}
-                    className="rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+                    className="rounded-full bg-white px-4 py-2 text-sm font-medium text-black hover:invert disabled:opacity-50"
                   >
                     傳送
                   </button>
                 </div>
               )}
 
-              <div className="mt-2 text-xs text-gray-500">
+              <div className="mt-2 text-xs text-white/50">
                 若看不到資料，通常是 RLS / user_id 沒對上，或 messages/leads 尚未加上 user_id。
               </div>
             </div>
@@ -604,16 +604,16 @@ export default function LeadsDashboardPage() {
           </div>
 
           {/* Leads (right) */}
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden lg:col-span-3">
-            <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm overflow-hidden lg:col-span-3">
+            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
               <div 
                 className="flex items-center gap-2 cursor-pointer select-none"
                 onClick={() => setIsLeadsOpen(!isLeadsOpen)}
               >
-                {isLeadsOpen ? <ChevronDown className="w-5 h-5 text-gray-500" /> : <ChevronRight className="w-5 h-5 text-gray-500" />}
+                {isLeadsOpen ? <ChevronDown className="w-5 h-5 text-white/50" /> : <ChevronRight className="w-5 h-5 text-white/50" />}
                 <div>
-                  <div className="text-gray-900 font-semibold tracking-tight">留下的名單（leads）</div>
-                  <div className="text-sm text-gray-600 mt-1">只會顯示屬於你帳號的資料（RLS）。</div>
+                  <div className="font-semibold tracking-tight">留下的名單（leads）</div>
+                  <div className="text-sm text-white/70 mt-1">只會顯示屬於你帳號的資料（RLS）。</div>
                 </div>
               </div>
               <button
@@ -622,7 +622,7 @@ export default function LeadsDashboardPage() {
                   e.stopPropagation();
                   refreshLeads();
                 }}
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
                 disabled={loadingLeads}
               >
                 重新整理
@@ -632,49 +632,49 @@ export default function LeadsDashboardPage() {
             {isLeadsOpen && (
               <>
             {leadsError && (
-              <div className="m-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="m-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                 {leadsError}
               </div>
             )}
 
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-white/10">
+                <thead className="bg-white/5">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">時間</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">姓名</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">電話</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">備註</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-white/60 uppercase tracking-wider">時間</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-white/60 uppercase tracking-wider">姓名</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-white/60 uppercase tracking-wider">電話</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-white/60 uppercase tracking-wider">備註</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-white/10">
                   {loadingLeads ? (
                     <tr>
-                      <td className="px-4 py-4 text-sm text-gray-500" colSpan={4}>
+                      <td className="px-4 py-4 text-sm text-white/50" colSpan={4}>
                         讀取中…
                       </td>
                     </tr>
                   ) : leads.length === 0 ? (
                     <tr>
-                      <td className="px-4 py-4 text-sm text-gray-500" colSpan={4}>
+                      <td className="px-4 py-4 text-sm text-white/50" colSpan={4}>
                         尚無資料
                       </td>
                     </tr>
                   ) : (
                     leads.map((lead, idx) => (
-                      <tr key={String(lead.id ?? idx)} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                      <tr key={String(lead.id ?? idx)} className="hover:bg-white/5">
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-white/50">
                           {lead.created_at
                             ? new Date(lead.created_at).toLocaleString('zh-TW')
                             : '-'}
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-white">
                           {lead.name ?? '-'}
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-white/70">
                           {lead.phone ?? '-'}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-600 whitespace-pre-line">
+                        <td className="px-4 py-3 text-sm text-white/70 whitespace-pre-line">
                           {lead.note ?? '-'}
                         </td>
                       </tr>

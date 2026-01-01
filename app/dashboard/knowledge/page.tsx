@@ -394,18 +394,18 @@ export default function KnowledgePage() {
   };
 
   return (
-    <div className="min-h-[100svh] bg-gray-50">
+    <div className="min-h-[100svh] bg-black text-white selection:bg-amber-500/30 overflow-x-hidden">
       <div className="mx-auto max-w-4xl min-h-[100svh] flex flex-col">
-        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-gray-200">
-          <div className="px-4 sm:px-6 py-4 text-gray-900 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-3xl border-b border-white/10">
+          <div className="px-4 sm:px-6 py-4 flex items-center justify-between">
             <div>
               <div className="font-semibold tracking-tight">AI 知識庫管理</div>
-              <div className="text-xs text-gray-500 mt-0.5">{userEmail}</div>
+              <div className="text-xs text-white/50 mt-0.5">{userEmail}</div>
             </div>
             <div className="flex items-center gap-2">
               <a
                 href="/dashboard/leads"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 回業務後台
               </a>
@@ -415,14 +415,14 @@ export default function KnowledgePage() {
 
         <div className="flex-1 px-4 sm:px-6 py-6 space-y-6">
           {/* Add New */}
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm p-5">
-            <div className="text-gray-900 font-semibold tracking-tight mb-1">新增知識</div>
-            <div className="text-sm text-gray-600 mb-4">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm p-5">
+            <div className="font-semibold tracking-tight mb-1">新增知識</div>
+            <div className="text-sm text-white/60 mb-4">
               輸入您希望 AI 學習的銷售話術、常見問題回答、或談判技巧。AI 會在對話時自動參考這些內容。
             </div>
             <form onSubmit={handleSubmit}>
               <textarea
-                className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm min-h-[120px] focus:outline-none focus:border-gray-900"
+                className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm min-h-[120px] text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/30"
                 placeholder="例如：如果客戶覺得價格太高，可以強調我們的售後服務價值..."
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
@@ -430,7 +430,7 @@ export default function KnowledgePage() {
               />
               <div className="mt-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <label className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                  <label className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
                     {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                     <span>{uploading ? '處理中...' : '上傳 PDF / 圖片'}</span>
                     <input
@@ -442,15 +442,15 @@ export default function KnowledgePage() {
                     />
                   </label>
                   <div className="flex flex-col gap-1">
-                    <span className="text-xs text-gray-400 hidden sm:inline-block">支援 PDF 文件或圖片 (OCR)</span>
+                    <span className="text-xs text-white/40 hidden sm:inline-block">支援 PDF 文件或圖片 (OCR)</span>
                     <label className="flex items-center gap-1.5 cursor-pointer select-none">
                       <input 
                         type="checkbox" 
                         checked={useAiVision} 
                         onChange={(e) => setUseAiVision(e.target.checked)}
-                        className="w-3.5 h-3.5 rounded border-gray-300 text-black focus:ring-black"
+                        className="w-3.5 h-3.5 rounded border-white/20 bg-black/30 text-amber-500 focus:ring-2 focus:ring-amber-500/30"
                       />
-                      <span className="text-xs text-gray-500">使用 AI 視覺辨識 (適合商品 DM / 掃描檔)</span>
+                      <span className="text-xs text-white/50">使用 AI 視覺辨識 (適合商品 DM / 掃描檔)</span>
                     </label>
                   </div>
                 </div>
@@ -458,7 +458,7 @@ export default function KnowledgePage() {
                 <button
                   type="submit"
                   disabled={submitting || !newContent.trim()}
-                  className="flex items-center gap-2 bg-gray-950 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-900 disabled:opacity-50"
+                  className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-medium hover:invert disabled:opacity-50"
                 >
                   {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                   新增至知識庫
@@ -468,11 +468,11 @@ export default function KnowledgePage() {
           </div>
 
           {/* Vector store status */}
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm p-5">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="text-gray-900 font-semibold tracking-tight">RAG 訓練狀態</div>
-                <div className="text-sm text-gray-600 mt-1">
+                <div className="font-semibold tracking-tight">RAG 訓練狀態</div>
+                <div className="text-sm text-white/60 mt-1">
                   顯示目前向量庫的檔案數量與訓練進度。
                 </div>
               </div>
@@ -482,7 +482,7 @@ export default function KnowledgePage() {
                   type="button"
                   onClick={() => fetchVectorStore()}
                   disabled={loadingVectorStore}
-                  className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium disabled:opacity-50"
+                  className="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-sm font-medium disabled:opacity-50"
                 >
                   {loadingVectorStore ? '更新中…' : '重新整理'}
                 </button>
@@ -490,7 +490,7 @@ export default function KnowledgePage() {
                   type="button"
                   onClick={() => fetchVectorStore({ ensure: true })}
                   disabled={loadingVectorStore}
-                  className="px-3 py-1.5 rounded-full bg-gray-950 hover:bg-gray-900 text-white text-sm font-medium disabled:opacity-50"
+                  className="px-3 py-1.5 rounded-full bg-white text-black hover:invert text-sm font-medium disabled:opacity-50"
                 >
                   啟用 RAG
                 </button>
@@ -499,48 +499,48 @@ export default function KnowledgePage() {
 
             {vectorStore.present ? (
               <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3">
-                  <div className="text-xs text-gray-500">總檔案</div>
-                  <div className="mt-1 text-lg font-semibold text-gray-900">
+                <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+                  <div className="text-xs text-white/50">總檔案</div>
+                  <div className="mt-1 text-lg font-semibold text-white">
                     {vectorStore.vectorStore?.file_counts?.total ?? '-'}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3">
-                  <div className="text-xs text-gray-500">完成</div>
-                  <div className="mt-1 text-lg font-semibold text-gray-900">
+                <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+                  <div className="text-xs text-white/50">完成</div>
+                  <div className="mt-1 text-lg font-semibold text-white">
                     {vectorStore.vectorStore?.file_counts?.completed ?? '-'}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3">
-                  <div className="text-xs text-gray-500">進行中</div>
-                  <div className="mt-1 text-lg font-semibold text-gray-900">
+                <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+                  <div className="text-xs text-white/50">進行中</div>
+                  <div className="mt-1 text-lg font-semibold text-white">
                     {vectorStore.vectorStore?.file_counts?.in_progress ?? '-'}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3">
-                  <div className="text-xs text-gray-500">失敗</div>
-                  <div className="mt-1 text-lg font-semibold text-gray-900">
+                <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+                  <div className="text-xs text-white/50">失敗</div>
+                  <div className="mt-1 text-lg font-semibold text-white">
                     {vectorStore.vectorStore?.file_counts?.failed ?? '-'}
                   </div>
                 </div>
 
-                <div className="col-span-2 sm:col-span-4 text-xs text-gray-500 mt-1">
+                <div className="col-span-2 sm:col-span-4 text-xs text-white/50 mt-1">
                   Vector Store ID：{vectorStore.vectorStoreId}
                 </div>
               </div>
             ) : (
-              <div className="mt-4 text-sm text-gray-600">
+              <div className="mt-4 text-sm text-white/60">
                 尚未初始化向量庫。可先上傳檔案或點「啟用 RAG」。
               </div>
             )}
           </div>
 
           {/* Uploaded files */}
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm p-5">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="text-gray-900 font-semibold tracking-tight">已上傳檔案</div>
-                <div className="text-sm text-gray-600 mt-1">
+                <div className="font-semibold tracking-tight">已上傳檔案</div>
+                <div className="text-sm text-white/60 mt-1">
                   檢視過往上傳檔案，並可更新訓練狀態或刪除。
                 </div>
               </div>
@@ -549,7 +549,7 @@ export default function KnowledgePage() {
                   type="button"
                   onClick={fetchFiles}
                   disabled={loadingFiles}
-                  className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium disabled:opacity-50"
+                  className="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-sm font-medium disabled:opacity-50"
                 >
                   {loadingFiles ? '讀取中…' : '重新整理'}
                 </button>
@@ -557,7 +557,7 @@ export default function KnowledgePage() {
                   type="button"
                   onClick={refreshTrainingStatus}
                   disabled={refreshingBatchStatus || files.length === 0}
-                  className="px-3 py-1.5 rounded-full bg-gray-950 hover:bg-gray-900 text-white text-sm font-medium disabled:opacity-50"
+                  className="px-3 py-1.5 rounded-full bg-white text-black hover:invert text-sm font-medium disabled:opacity-50"
                 >
                   {refreshingBatchStatus ? '更新中…' : '更新訓練狀態'}
                 </button>
@@ -565,11 +565,11 @@ export default function KnowledgePage() {
             </div>
 
             {loadingFiles ? (
-              <div className="text-center py-8 text-gray-500">讀取中...</div>
+              <div className="text-center py-8 text-white/50">讀取中...</div>
             ) : filesError ? (
-              <div className="text-center py-8 text-red-500">{filesError}</div>
+              <div className="text-center py-8 text-red-200">{filesError}</div>
             ) : files.length === 0 ? (
-              <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-2xl border border-gray-200 border-dashed">
+              <div className="text-center py-8 text-white/50 bg-white/5 rounded-2xl border border-white/10 border-dashed">
                 尚無檔案記錄。
               </div>
             ) : (
@@ -578,13 +578,13 @@ export default function KnowledgePage() {
                   const bid = (f.openai_batch_id || '').trim();
                   const st = bid ? batchStatus[bid]?.status || (batchStatus[bid]?.error ? 'error' : '') : '';
                   return (
-                    <div key={f.id} className="rounded-2xl border border-gray-200 bg-white p-4">
+                    <div key={f.id} className="rounded-2xl border border-white/10 bg-black/30 p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <div className="text-sm font-medium text-gray-900 truncate">
+                          <div className="text-sm font-medium text-white truncate">
                             {f.original_name || '(未命名)'}
                           </div>
-                          <div className="mt-1 text-xs text-gray-500">
+                          <div className="mt-1 text-xs text-white/50">
                             類型：{f.kind}　•　上傳於：{new Date(f.created_at).toLocaleString('zh-TW')}
                             {st ? `　•　訓練：${st}` : ''}
                           </div>
@@ -594,7 +594,7 @@ export default function KnowledgePage() {
                             <button
                               type="button"
                               onClick={() => openStoredFile(f)}
-                              className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium"
+                              className="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-sm font-medium"
                             >
                               開啟
                             </button>
@@ -602,7 +602,7 @@ export default function KnowledgePage() {
                           <button
                             type="button"
                             onClick={() => handleDeleteFile(f.id)}
-                            className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-red-700"
+                            className="px-3 py-1.5 rounded-full border border-red-500/30 bg-red-500/10 hover:bg-red-500/15 text-sm font-medium text-red-200"
                           >
                             刪除
                           </button>
@@ -617,29 +617,29 @@ export default function KnowledgePage() {
 
           {/* List */}
           <div className="space-y-4">
-            <div className="text-gray-900 font-semibold tracking-tight px-1">已儲存的知識 ({items.length})</div>
+            <div className="font-semibold tracking-tight px-1">已儲存的知識 ({items.length})</div>
             
             {loading ? (
-              <div className="text-center py-10 text-gray-500">讀取中...</div>
+              <div className="text-center py-10 text-white/50">讀取中...</div>
             ) : error ? (
-              <div className="text-center py-10 text-red-500">{error}</div>
+              <div className="text-center py-10 text-red-200">{error}</div>
             ) : items.length === 0 ? (
-              <div className="text-center py-10 text-gray-500 bg-white rounded-3xl border border-gray-200 border-dashed">
+              <div className="text-center py-10 text-white/50 bg-white/5 rounded-3xl border border-white/10 border-dashed">
                 尚無資料，請上方新增。
               </div>
             ) : (
               <div className="grid gap-4">
                 {items.map((item) => (
-                  <div key={item.id} className="group relative rounded-2xl border border-gray-200 bg-white p-4 hover:shadow-sm transition-shadow">
-                    <div className="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed pr-8">
+                  <div key={item.id} className="group relative rounded-2xl border border-white/10 bg-black/30 p-4">
+                    <div className="text-sm text-white whitespace-pre-wrap leading-relaxed pr-8">
                       {item.content}
                     </div>
-                    <div className="mt-3 text-xs text-gray-400">
+                    <div className="mt-3 text-xs text-white/40">
                       建立於：{new Date(item.created_at).toLocaleString('zh-TW')}
                     </div>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="absolute top-3 right-3 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                      className="absolute top-3 right-3 p-2 text-white/40 hover:text-red-200 hover:bg-red-500/10 rounded-full transition-colors opacity-0 group-hover:opacity-100"
                       title="刪除"
                     >
                       <Trash2 className="w-4 h-4" />

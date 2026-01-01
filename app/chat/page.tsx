@@ -282,14 +282,14 @@ export default function ChatPage() {
     const value = surveyAnswers[q.id];
 
     const label = (
-      <div className="text-xs font-medium text-gray-600">
+      <div className="text-xs font-medium text-white/60">
         {q.title}
         {q.required ? ' *' : ''}
       </div>
     );
 
     const desc = q.description ? (
-      <div className="mt-1 text-xs text-gray-500">{q.description}</div>
+      <div className="mt-1 text-xs text-white/40">{q.description}</div>
     ) : null;
 
     if (q.type === 'longText') {
@@ -298,7 +298,7 @@ export default function ChatPage() {
           {label}
           {desc}
           <textarea
-            className="mt-2 w-full min-h-[88px] rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+            className="mt-2 w-full min-h-[88px] rounded-2xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/30"
             value={typeof value === 'string' ? value : ''}
             onChange={(e) => setSurveyAnswers((p) => ({ ...p, [q.id]: e.target.value }))}
             disabled={disabled}
@@ -313,7 +313,7 @@ export default function ChatPage() {
           {label}
           {desc}
           <input
-            className="mt-2 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+            className="mt-2 w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/30"
             value={typeof value === 'string' ? value : ''}
             onChange={(e) => setSurveyAnswers((p) => ({ ...p, [q.id]: e.target.value }))}
             disabled={disabled}
@@ -330,7 +330,7 @@ export default function ChatPage() {
           {label}
           {desc}
           <select
-            className="mt-2 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+            className="mt-2 w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/30"
             value={current}
             onChange={(e) => {
               const v = e.target.value;
@@ -359,11 +359,11 @@ export default function ChatPage() {
           {desc}
           <div className="mt-2 space-y-2">
             {options.map((opt) => (
-              <label key={opt} className="flex items-center gap-2 text-sm text-gray-900">
+              <label key={opt} className="flex items-center gap-2 text-sm text-white">
                 <input
                   type="radio"
                   name={`q-${q.id}`}
-                  className="rounded-full border-gray-300"
+                  className="rounded-full border-white/20 bg-black/30 text-amber-500 focus:ring-2 focus:ring-amber-500/30"
                   checked={current === opt}
                   onChange={() => setSurveyAnswers((p) => ({ ...p, [q.id]: opt }))}
                   disabled={disabled}
@@ -386,10 +386,10 @@ export default function ChatPage() {
           {desc}
           <div className="mt-2 space-y-2">
             {options.map((opt) => (
-              <label key={opt} className="flex items-center gap-2 text-sm text-gray-900">
+              <label key={opt} className="flex items-center gap-2 text-sm text-white">
                 <input
                   type="checkbox"
-                  className="rounded border-gray-300"
+                  className="rounded border-white/20 bg-black/30 text-amber-500 focus:ring-2 focus:ring-amber-500/30"
                   checked={selected.has(opt)}
                   onChange={(e) => {
                     const next = new Set(selected);
@@ -613,10 +613,10 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-[100svh] bg-gray-50">
+    <div className="min-h-[100svh] bg-black text-white selection:bg-amber-500/30 overflow-x-hidden">
       <div className="mx-auto max-w-5xl min-h-[100svh] flex flex-col">
-        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-gray-200">
-          <div className="px-4 sm:px-6 py-4 text-gray-900 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-3xl border-b border-white/10">
+          <div className="px-4 sm:px-6 py-4 flex items-center justify-between">
             <div className="font-semibold tracking-tight">
               {mode === 'chat' ? '聊天模式' : mode === 'survey' ? '問卷模式' : '名片模式'}
             </div>
@@ -624,25 +624,25 @@ export default function ChatPage() {
             <div className="flex items-center gap-2">
               <Link
                 href="/"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 首頁
               </Link>
               <Link
                 href="/login"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 業務登入
               </Link>
               <Link
                 href="/import"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 匯入名片
               </Link>
               <Link
                 href="/dashboard"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 Dashboard
               </Link>
@@ -653,8 +653,8 @@ export default function ChatPage() {
                 aria-pressed={mode === 'chat'}
                 className={
                   mode === 'chat'
-                    ? 'text-sm font-medium px-3 py-1.5 rounded-full bg-gray-950 text-white hover:bg-gray-900 active:bg-gray-900'
-                    : 'text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100'
+                    ? 'text-sm font-medium px-3 py-1.5 rounded-full bg-white text-black hover:invert active:invert'
+                    : 'text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15'
                 }
               >
                 聊天
@@ -665,8 +665,8 @@ export default function ChatPage() {
                 aria-pressed={mode === 'survey'}
                 className={
                   mode === 'survey'
-                    ? 'text-sm font-medium px-3 py-1.5 rounded-full bg-gray-950 text-white hover:bg-gray-900 active:bg-gray-900'
-                    : 'text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100'
+                    ? 'text-sm font-medium px-3 py-1.5 rounded-full bg-white text-black hover:invert active:invert'
+                    : 'text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15'
                 }
               >
                 問卷
@@ -677,8 +677,8 @@ export default function ChatPage() {
                 aria-pressed={mode === 'card'}
                 className={
                   mode === 'card'
-                    ? 'text-sm font-medium px-3 py-1.5 rounded-full bg-gray-950 text-white hover:bg-gray-900 active:bg-gray-900'
-                    : 'text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100'
+                    ? 'text-sm font-medium px-3 py-1.5 rounded-full bg-white text-black hover:invert active:invert'
+                    : 'text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15'
                 }
               >
                 名片
@@ -688,15 +688,17 @@ export default function ChatPage() {
         </div>
 
         {error && (
-          <div className="bg-red-100 text-red-700 p-2 text-sm text-center">錯誤: {error.message}</div>
+          <div className="bg-red-500/10 text-red-200 p-2 text-sm text-center border-b border-red-500/20">
+            錯誤: {error.message}
+          </div>
         )}
 
         {mode === 'chat' ? (
           <div className="flex-1 px-3 sm:px-6 py-4 flex justify-center">
-            <div className="w-full max-w-md flex flex-col rounded-2xl sm:rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            <div className="w-full max-w-md flex flex-col rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 shadow-sm overflow-hidden">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/30">
                 {messages.length === 0 && (
-                  <div className="text-center text-gray-400 mt-10">請輸入訊息開始對話</div>
+                  <div className="text-center text-white/40 mt-10">請輸入訊息開始對話</div>
                 )}
 
                 {messages.map((m, i) => {
@@ -709,14 +711,14 @@ export default function ChatPage() {
                       <div
                         className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                           m.role === 'user'
-                            ? 'bg-gray-950 text-white'
+                            ? 'bg-white text-black'
                             : isAgent
-                              ? 'bg-blue-50 border border-blue-200 text-blue-900'
-                              : 'bg-white border border-gray-200 text-gray-900'
+                              ? 'bg-amber-500/10 border border-amber-500/30 text-amber-50'
+                              : 'bg-white/5 border border-white/10 text-white'
                         }`}
                       >
                         {isAgent ? (
-                          <div className="text-[10px] font-bold text-blue-600 mb-1">業務人員</div>
+                          <div className="text-[10px] font-bold text-amber-300 mb-1">業務人員</div>
                         ) : null}
                         {hasToolPart(m.parts) ? (
                           <span className="italic opacity-80">🤖 正在處理預約...</span>
@@ -729,13 +731,16 @@ export default function ChatPage() {
                 })}
 
                 {status === 'streaming' && (
-                  <div className="text-gray-400 text-xs ml-2">AI 正在思考...</div>
+                  <div className="text-white/40 text-xs ml-2">AI 正在思考...</div>
                 )}
               </div>
 
-              <form onSubmit={handleMySubmit} className="p-3 bg-white border-t flex gap-2">
+              <form
+                onSubmit={handleMySubmit}
+                className="p-3 bg-black/30 border-t border-white/10 flex gap-2"
+              >
                 <input
-                  className="flex-1 border border-gray-200 rounded-full px-4 py-2 text-gray-900 bg-white"
+                  className="flex-1 border border-white/10 rounded-full px-4 py-2 text-white bg-black/30 placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/30"
                   value={myInput}
                   onChange={(e) => setMyInput(e.target.value)}
                   placeholder={sessionId ? '輸入訊息...' : '初始化中...'}
@@ -744,7 +749,7 @@ export default function ChatPage() {
                 <button
                   type="submit"
                   disabled={status === 'streaming' || !myInput.trim() || !sessionId}
-                  className="bg-gray-950 text-white p-2 rounded-full hover:bg-gray-900 disabled:bg-gray-400 transition"
+                  className="bg-white text-black p-2 rounded-full hover:invert disabled:opacity-50 transition"
                 >
                   <Send size={20} />
                 </button>
@@ -755,10 +760,10 @@ export default function ChatPage() {
               <div className="fixed inset-0 z-20">
                 <div className="absolute inset-0 bg-black/30" onClick={() => setLeadModalOpen(false)} />
                 <div className="absolute inset-0 flex items-end sm:items-center justify-center p-3 sm:p-6">
-                  <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-                    <div className="px-5 py-4 border-b border-gray-200">
-                      <div className="text-gray-900 font-semibold tracking-tight">留下聯絡方式</div>
-                      <div className="mt-1 text-sm text-gray-600">{leadReason}</div>
+                  <div className="w-full max-w-md rounded-3xl border border-white/10 bg-black/60 backdrop-blur-3xl shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 border-b border-white/10">
+                      <div className="font-semibold tracking-tight">留下聯絡方式</div>
+                      <div className="mt-1 text-sm text-white/60">{leadReason}</div>
                     </div>
 
                     <form
@@ -803,18 +808,18 @@ export default function ChatPage() {
                     >
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <label className="block">
-                          <div className="text-xs font-medium text-gray-600">稱呼 *</div>
+                          <div className="text-xs font-medium text-white/60">稱呼 *</div>
                           <input
-                            className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                            className="mt-1 w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/30"
                             value={leadForm.name}
                             onChange={(e) => setLeadForm((p) => ({ ...p, name: e.target.value }))}
                             required
                           />
                         </label>
                         <label className="block">
-                          <div className="text-xs font-medium text-gray-600">電話 *</div>
+                          <div className="text-xs font-medium text-white/60">電話 *</div>
                           <input
-                            className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                            className="mt-1 w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/30"
                             value={leadForm.phone}
                             onChange={(e) => setLeadForm((p) => ({ ...p, phone: e.target.value }))}
                             required
@@ -824,17 +829,17 @@ export default function ChatPage() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <label className="block">
-                          <div className="text-xs font-medium text-gray-600">LINE</div>
+                          <div className="text-xs font-medium text-white/60">LINE</div>
                           <input
-                            className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                            className="mt-1 w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/30"
                             value={leadForm.line}
                             onChange={(e) => setLeadForm((p) => ({ ...p, line: e.target.value }))}
                           />
                         </label>
                         <label className="block">
-                          <div className="text-xs font-medium text-gray-600">Email</div>
+                          <div className="text-xs font-medium text-white/60">Email</div>
                           <input
-                            className="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                            className="mt-1 w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/30"
                             value={leadForm.email}
                             onChange={(e) => setLeadForm((p) => ({ ...p, email: e.target.value }))}
                           />
@@ -842,22 +847,22 @@ export default function ChatPage() {
                       </div>
 
                       <label className="block">
-                        <div className="text-xs font-medium text-gray-600">需求/備註</div>
+                        <div className="text-xs font-medium text-white/60">需求/備註</div>
                         <textarea
-                          className="mt-1 w-full min-h-[88px] rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 bg-white"
+                          className="mt-1 w-full min-h-[88px] rounded-2xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500/30"
                           value={leadForm.note}
                           onChange={(e) => setLeadForm((p) => ({ ...p, note: e.target.value }))}
                         />
                       </label>
 
                       {leadSubmitError ? (
-                        <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-2xl px-3 py-2">
+                        <div className="text-sm text-red-200 bg-red-500/10 border border-red-500/30 rounded-2xl px-3 py-2">
                           {leadSubmitError}
                         </div>
                       ) : null}
 
                       {leadSubmitSuccess ? (
-                        <div className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-2xl px-3 py-2">
+                        <div className="text-sm text-emerald-200 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl px-3 py-2">
                           已送出，謝謝！
                         </div>
                       ) : null}
@@ -866,14 +871,14 @@ export default function ChatPage() {
                         <button
                           type="button"
                           onClick={() => setLeadModalOpen(false)}
-                          className="flex-1 border border-gray-200 bg-white hover:bg-gray-50 text-gray-900 rounded-full py-2.5 font-medium"
+                          className="flex-1 border border-white/10 bg-white/5 hover:bg-white/10 text-white rounded-full py-2.5 font-medium"
                           disabled={leadSubmitting}
                         >
                           取消
                         </button>
                         <button
                           type="submit"
-                          className="flex-1 bg-gray-950 hover:bg-gray-900 text-white rounded-full py-2.5 font-medium disabled:bg-gray-400"
+                          className="flex-1 bg-white text-black hover:invert rounded-full py-2.5 font-medium disabled:opacity-50"
                           disabled={leadSubmitting || !leadForm.name.trim() || !leadForm.phone.trim()}
                         >
                           {leadSubmitting ? '送出中…' : '送出'}
@@ -887,10 +892,10 @@ export default function ChatPage() {
           </div>
         ) : mode === 'survey' ? (
           <div className="flex-1 px-3 sm:px-6 py-6 flex items-start justify-center">
-            <div className="w-full max-w-md rounded-2xl sm:rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-              <div className="px-5 py-4 border-b border-gray-200">
-                <div className="text-gray-900 font-semibold tracking-tight">{surveySettings.title}</div>
-                <div className="mt-1 text-sm text-gray-600">{surveySettings.description}</div>
+            <div className="w-full max-w-md rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-white/10">
+                <div className="font-semibold tracking-tight">{surveySettings.title}</div>
+                <div className="mt-1 text-sm text-white/60">{surveySettings.description}</div>
               </div>
 
               <form className="px-5 py-5 space-y-3" onSubmit={submitSurvey}>
@@ -900,14 +905,14 @@ export default function ChatPage() {
                   <button
                     type="button"
                     onClick={() => setMode('chat')}
-                    className="flex-1 border border-gray-200 bg-white hover:bg-gray-50 text-gray-900 rounded-full py-2.5 font-medium"
+                    className="flex-1 border border-white/10 bg-white/5 hover:bg-white/10 text-white rounded-full py-2.5 font-medium"
                     disabled={status === 'streaming' || surveySubmitting}
                   >
                     回聊天
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 bg-gray-950 hover:bg-gray-900 text-white rounded-full py-2.5 font-medium disabled:bg-gray-400"
+                    className="flex-1 bg-white text-black hover:invert rounded-full py-2.5 font-medium disabled:opacity-50"
                     disabled={status === 'streaming' || surveySubmitting}
                   >
                     {surveySubmitting ? '送出中…' : surveySettings.submitLabel}
@@ -920,21 +925,21 @@ export default function ChatPage() {
           <div className="flex-1 px-3 sm:px-6 py-6 flex items-start justify-center">
             <div className="w-full">
               <div className="flex items-center justify-between mb-4">
-                <div className="text-sm text-gray-600">
-                  模板：<span className="text-gray-900 font-medium">{businessCard.template}</span>
+                <div className="text-sm text-white/60">
+                  模板：<span className="text-white font-medium">{businessCard.template}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => cycleTemplate(-1)}
-                    className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 text-sm font-medium"
+                    className="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15 text-sm font-medium"
                   >
                     上一個
                   </button>
                   <button
                     type="button"
                     onClick={() => cycleTemplate(1)}
-                    className="px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 text-sm font-medium"
+                    className="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15 text-sm font-medium"
                   >
                     下一個
                   </button>
@@ -947,7 +952,7 @@ export default function ChatPage() {
                   <button
                     type="button"
                     onClick={() => setMode('chat')}
-                    className="w-full bg-gray-950 text-white rounded-full py-2.5 font-medium hover:bg-gray-900 transition"
+                    className="w-full bg-white text-black rounded-full py-2.5 font-medium hover:invert transition"
                   >
                     開始聊天
                   </button>

@@ -121,25 +121,25 @@ export default function SurveyResponsesPage() {
   };
 
   return (
-    <div className="min-h-[100svh] bg-gray-50">
+    <div className="min-h-[100svh] bg-black text-white selection:bg-amber-500/30 overflow-x-hidden">
       <div className="mx-auto max-w-5xl min-h-[100svh] flex flex-col">
-        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-gray-200">
-          <div className="px-4 sm:px-6 py-4 text-gray-900 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-3xl border-b border-white/10">
+          <div className="px-4 sm:px-6 py-4 flex items-center justify-between">
             <div>
               <div className="font-semibold tracking-tight">問卷作答紀錄</div>
-              <div className="text-xs text-gray-500 mt-0.5">{userEmail ? `登入中：${userEmail}` : ''}</div>
+              <div className="text-xs text-white/50 mt-0.5">{userEmail ? `登入中：${userEmail}` : ''}</div>
             </div>
 
             <div className="flex items-center gap-2">
               <Link
                 href="/dashboard/survey"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 回問卷設定
               </Link>
               <Link
                 href="/dashboard/leads"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 業務後台
               </Link>
@@ -149,7 +149,7 @@ export default function SurveyResponsesPage() {
                   await supabase.auth.signOut();
                   router.replace('/login');
                 }}
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 登出
               </button>
@@ -158,33 +158,33 @@ export default function SurveyResponsesPage() {
         </div>
 
         <div className="flex-1 px-4 sm:px-6 py-6">
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
               <div>
                 <div className="font-semibold tracking-tight">最近 200 筆</div>
-                <div className="text-xs text-gray-500 mt-0.5">點選一筆可展開查看 Q&A。</div>
+                <div className="text-xs text-white/50 mt-0.5">點選一筆可展開查看 Q&A。</div>
               </div>
               <button
                 type="button"
                 onClick={reload}
                 disabled={loading}
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 disabled:opacity-60"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15 disabled:opacity-50"
               >
                 {loading ? '讀取中…' : '重新載入'}
               </button>
             </div>
 
             {error ? (
-              <div className="m-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="m-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                 {error}
               </div>
             ) : null}
 
             <div className="px-4 py-4">
               {loading ? (
-                <div className="text-sm text-gray-500">讀取中…</div>
+                <div className="text-sm text-white/50">讀取中…</div>
               ) : rows.length === 0 ? (
-                <div className="text-sm text-gray-500">尚無作答</div>
+                <div className="text-sm text-white/50">尚無作答</div>
               ) : (
                 <div className="space-y-3">
                   {rows.map((r) => {
@@ -201,33 +201,33 @@ export default function SurveyResponsesPage() {
                     }
 
                     return (
-                      <div key={r.id} className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
+                      <div key={r.id} className="rounded-2xl border border-white/10 bg-black/30 overflow-hidden">
                         <button
                           type="button"
                           onClick={() => setOpenId(opened ? null : r.id)}
-                          className="w-full text-left px-4 py-3 hover:bg-gray-50"
+                          className="w-full text-left px-4 py-3 hover:bg-white/5"
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div>
-                              <div className="text-sm font-medium text-gray-900">{title}</div>
-                              <div className="mt-0.5 text-xs text-gray-500">
+                              <div className="text-sm font-medium text-white">{title}</div>
+                              <div className="mt-0.5 text-xs text-white/50">
                                 {new Date(r.created_at).toLocaleString('zh-TW')} · session：{r.session_id}
                               </div>
                             </div>
-                            <div className="text-xs text-gray-500">#{r.id}</div>
+                            <div className="text-xs text-white/50">#{r.id}</div>
                           </div>
                         </button>
 
                         {opened ? (
                           <div className="px-4 pb-4">
                             {items.length === 0 ? (
-                              <div className="text-sm text-gray-500">（無內容）</div>
+                              <div className="text-sm text-white/50">（無內容）</div>
                             ) : (
                               <div className="space-y-2">
                                 {items.map((it, idx) => (
-                                  <div key={`${r.id}-${idx}`} className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
-                                    <div className="text-xs font-medium text-gray-600">{it.q}</div>
-                                    <div className="mt-1 text-sm text-gray-900 whitespace-pre-line">{it.a}</div>
+                                  <div key={`${r.id}-${idx}`} className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                                    <div className="text-xs font-medium text-white/70">{it.q}</div>
+                                    <div className="mt-1 text-sm text-white whitespace-pre-line">{it.a}</div>
                                   </div>
                                 ))}
                               </div>
@@ -240,7 +240,7 @@ export default function SurveyResponsesPage() {
                 </div>
               )}
 
-              <div className="mt-3 text-xs text-gray-500">
+              <div className="mt-3 text-xs text-white/50">
                 若這頁看不到資料，多半是 RLS / user_id 沒對上；確認前台送出問卷時能寫入正確 user_id（通常由 DEFAULT_OWNER_USER_ID 或登入 token 決定）。
               </div>
             </div>

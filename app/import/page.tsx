@@ -60,21 +60,21 @@ export default function ImportBusinessCardPage() {
   };
 
   return (
-    <div className="min-h-[100svh] bg-gray-50">
+    <div className="min-h-[100svh] bg-black text-white selection:bg-amber-500/30 overflow-x-hidden">
       <div className="mx-auto max-w-5xl min-h-[100svh] flex flex-col">
-        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-gray-200">
-          <div className="px-4 sm:px-6 py-4 text-gray-900 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-3xl border-b border-white/10">
+          <div className="px-4 sm:px-6 py-4 flex items-center justify-between">
             <div className="font-semibold tracking-tight">匯入傳統名片</div>
             <div className="flex items-center gap-2">
               <Link
                 href="/"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 回首頁
               </Link>
               <Link
                 href="/dashboard"
-                className="text-sm font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100"
+                className="text-sm font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 active:bg-white/15"
               >
                 Dashboard
               </Link>
@@ -83,18 +83,18 @@ export default function ImportBusinessCardPage() {
         </div>
 
         <div className="flex-1 px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm p-5">
-            <div className="text-gray-900 font-semibold tracking-tight">上傳名片照片</div>
-            <div className="mt-1 text-sm text-gray-600">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm p-5">
+            <div className="text-white font-semibold tracking-tight">上傳名片照片</div>
+            <div className="mt-1 text-sm text-white/70">
               上傳後會自動解析姓名、職稱、公司、電話、Email 等資訊，並轉成我們的名片格式。
             </div>
 
             <label className="mt-4 block">
-              <div className="text-xs font-medium text-gray-600">選擇圖片檔</div>
+              <div className="text-xs font-medium text-white/70">選擇圖片檔</div>
               <input
                 type="file"
                 accept="image/*"
-                className="mt-1 block w-full text-sm"
+                className="mt-1 block w-full text-sm text-white file:mr-3 file:rounded-full file:border-0 file:bg-white file:px-4 file:py-2 file:text-sm file:font-medium file:text-black hover:file:invert"
                 onChange={(e) => {
                   const f = e.target.files?.[0] ?? null;
                   setError(null);
@@ -105,7 +105,7 @@ export default function ImportBusinessCardPage() {
             </label>
 
             {previewUrl && (
-              <div className="mt-4 rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
+              <div className="mt-4 rounded-2xl border border-white/10 bg-black/30 overflow-hidden">
                 <div className="relative w-full aspect-[4/3]">
                   <Image
                     src={previewUrl}
@@ -120,7 +120,7 @@ export default function ImportBusinessCardPage() {
             )}
 
             {error && (
-              <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="mt-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                 {error}
               </div>
             )}
@@ -171,27 +171,27 @@ export default function ImportBusinessCardPage() {
                     setLoading(false);
                   }
                 }}
-                className="px-4 py-2 rounded-full bg-gray-950 text-white text-sm font-medium hover:bg-gray-900 disabled:bg-gray-400"
+                className="px-4 py-2 rounded-full bg-white text-black text-sm font-medium hover:invert disabled:opacity-50"
               >
                 {loading ? '轉換中…' : '一鍵轉換'}
               </button>
 
               <Link
                 href="/"
-                className="px-4 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium hover:bg-gray-50 active:bg-gray-100"
+                className="px-4 py-2 rounded-full border border-white/10 bg-white/5 text-sm font-medium hover:bg-white/10 active:bg-white/15"
               >
                 轉換後去看名片
               </Link>
             </div>
 
-            <div className="mt-3 text-xs text-gray-500">
+            <div className="mt-3 text-xs text-white/50">
               提醒：解析結果可能需要到 Dashboard 微調。
             </div>
           </div>
 
-          <div className="rounded-3xl border border-gray-200 bg-white shadow-sm p-5">
-            <div className="text-gray-900 font-semibold tracking-tight">預覽（轉換後）</div>
-            <div className="mt-1 text-sm text-gray-600">
+          <div className="rounded-3xl border border-white/10 bg-white/5 shadow-sm p-5">
+            <div className="text-white font-semibold tracking-tight">預覽（轉換後）</div>
+            <div className="mt-1 text-sm text-white/70">
               轉換成功後會自動套用你目前的名片模板。
             </div>
 
